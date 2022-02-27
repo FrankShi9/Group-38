@@ -8,3 +8,6 @@
 ## BI with chatbot
 https://github.com/aws-samples/amazon-lex-bi-bot
 https://github.com/gbrian/bibot
+
+## 后端代码库：
+https://github.com/FrankShi9/Area_38_Backend
