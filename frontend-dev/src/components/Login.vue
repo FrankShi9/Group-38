@@ -29,29 +29,36 @@
 </template>
 
 <script>
-export default {
-    name:'Login',
-    data(){
-        return{
-            loginForm:{
-                email:'',
-                password:''
+    import axios from 'axios';
+
+    export default {
+        name: 'Login',
+        data() {
+            return{
+                loginForm: {
+                    email:'',
+                    password:''
+                }
+            }
+        },
+        methods:{
+            login(event) {
+                event.preventDefault()
+                console.log("login is clicked")
+
+
+                axios.post(
+                    'https://jsonplaceholder.typicode.com/users',
+                    {
+                        email: this.loginForm.email,
+                        password: this.loginForm.password
+                    }
+                )
+                .then(response => console.log(response.data))
+                .catch(error => console.log(error))
             }
         }
-    },
-    methods:{
-        login(){
-            axios.request({
-                url:'',
-                method:'post',
-                headers:{
-                    'Content-type':'text/plain'
-                },
-                data:this.loginForm,
-            })
-        }
     }
-}
 </script>
 
 
