@@ -3,7 +3,7 @@
 
         <div class="row align-items-center">
             <div class="col-6 offset-3">
-                <form :model="loginForm">
+                <form>
                     <!-- website logo -->
                     <div class="avatar-box">
                         <img src="../assets/logo.png" alt="" >

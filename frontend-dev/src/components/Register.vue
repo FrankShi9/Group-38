@@ -7,7 +7,7 @@
                 <div class="avatar-box">
                     <img src="../assets/logo.png" alt="" >
                 </div>
-                <form :model="registerForm" >
+                <form >
                     <div class="mb-3 align-self-start">
                         <label for="Username" class="form-label">Username</label>
                         <input v-model="registerForm.userName" type="text" class="form-control" id="Username"  required>
