@@ -1,5 +1,35 @@
 # Group-38
 
+## Run the Project
+
+新建conda环境
+
+`conda create -n proj38 python=3.7`
+
+激活环境
+
+`conda activate proj38`
+
+安装项目依赖
+
+`pip install -r requirements.txt `
+
+运行
+
+`python manage.py runserver`
+
+
+
+## 查看数据库
+
+`sqlite3 db.sqlite3`
+
+支持sql查询
+
+https://blog.csdn.net/u013664733/article/details/54912201
+
+
+
 ## 开源项目参考
 
 ### 百科全书： https://github.com/FrankShi9/awesome-business-intelligence
