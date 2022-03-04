@@ -15,8 +15,11 @@
 `pip install -r requirements.txt `
 
 运行
+```
+cd Area_38
+python manage.py runserver
+```
 
-`python manage.py runserver`
 
 
 
