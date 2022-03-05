@@ -1,3 +1,4 @@
+### 尝试了corsheader跨域接收register.vue的post过来的用户输入email与密码，并导入数据库，返回一个‘success’的http响应，但是目前log显示接受的是空内容，数据库存入的也是空内容，需要解决
 # Group-38
 
 ## Run the Project
