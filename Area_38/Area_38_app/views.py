@@ -2,13 +2,18 @@ from django.shortcuts import render, redirect
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.http import HttpResponse
 
 from .models import User
 from .serializer import LoginSerializer
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from . import models
+from .models import UserInfo
+
 import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger('Area_38_app')
 
 ''' Backup code 
 class LoginList(LoginRequiredMixin, APIView):
@@ -31,7 +36,6 @@ def login(request):
         password = request.POST.get("password")
 
         user_obj = models.UserInfo.objects.filter(email=email, password=password).first()
-        logging.info(user_obj.email)
 
     # TODO
     # if not user_obj:
@@ -50,7 +54,10 @@ def register(request):
     if request.method == "POST":
         email = request.POST.get("email")
         password = request.POST.get("password")
-        logging.info(email, password)
-        user_obj = models.UserInfo.objects.create(email=email, password=password)
-        logging.info(user_obj.email)
-        
+        # user_obj = models.UserInfo.objects.create(email=email, password=password)
+        user_obj = UserInfo(email=email, password=password)
+        user_obj.save()
+        logger.info(email)
+        logger.info(password)
+
+        return HttpResponse("Register success")
