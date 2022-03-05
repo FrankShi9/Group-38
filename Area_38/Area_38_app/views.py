@@ -8,7 +8,7 @@ from .serializer import LoginSerializer
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from . import models
-
+import logging
 
 ''' Backup code 
 class LoginList(LoginRequiredMixin, APIView):
@@ -26,12 +26,12 @@ def login(request):
     if request.method == "GET":
         return render(request, "index.html")
 
-    # if request.method == "POST"    
-    username = request.POST.get("username")
-    password = request.POST.get("pwd")
+    if request.method == "POST":
+        email = request.POST.get("email")
+        password = request.POST.get("password")
 
-    user_obj = models.UserInfo.objects.filter(username=username, password=password).first()
-    print(user_obj.username)
+        user_obj = models.UserInfo.objects.filter(email=email, password=password).first()
+        logging.info(user_obj.email)
 
     # TODO
     # if not user_obj:
@@ -40,3 +40,17 @@ def login(request):
     #     rep = redirect("/index/")  # Url redirect to index after success login
     #     rep.set_cookie("is_login", True)  # Update cookie
     #     return rep
+
+
+def register(request):
+    # if GET, simply render templates
+    if request.method == "GET":
+        return render(request, "index.html")
+
+    if request.method == "POST":
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+        logging.info(email, password)
+        user_obj = models.UserInfo.objects.create(email=email, password=password)
+        logging.info(user_obj.email)
+        
