@@ -33,17 +33,17 @@
 </template>
 
 <script>
-    import nodemailer from 'nodemailer'
+    //import nodemailer from 'nodemailer'
 
-    const transporter=nodemailer.createTransport({
-        host: "",
-        port: 465,
-        secureConnection:false,
-        auth: {
-            "user":"",
-            "pass":""
-        }
-    })
+    // const transporter=nodemailer.createTransport({
+    //     host: "",
+    //     port: 465,
+    //     secureConnection:false,
+    //     auth: {
+    //         "user":"",
+    //         "pass":""
+    //     }
+    // })
     export default {
         name: "Forget",
         data(){
@@ -55,24 +55,24 @@
                 }
             }
         },
-        methods:{
-            send(){
-
-                const mailOptions={
-                    from: "",
-                    to:"",
-                    subject:"",
-                    title:"",
-                    code: this.forgetForm.code
-                }
-                transporter.sendMail(mailOptions,function (error,info){
-                    if (error){
-                        console.log(error)
-                    }
-                    console.log('Message send: %s', info.messageId);
-                })
-            }
-        }
+        // methods:{
+        //     send(){
+        //
+        //         const mailOptions={
+        //             from: "",
+        //             to:"",
+        //             subject:"",
+        //             title:"",
+        //             code: this.forgetForm.code
+        //         }
+        //         transporter.sendMail(mailOptions,function (error,info){
+        //             if (error){
+        //                 console.log(error)
+        //             }
+        //             console.log('Message send: %s', info.messageId);
+        //         })
+        //     }
+        // }
     }
 </script>
 
