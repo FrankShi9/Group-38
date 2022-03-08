@@ -7,30 +7,32 @@
                 <div class="avatar-box">
                     <img src="../assets/logo.png" alt="" >
                 </div>
-                <form >
+                <form method="post" action="./views.py">
                     <div class="mb-3 align-self-start">
-                        <label for="Username" class="form-label">Username</label>
-                        <input v-model="registerForm.userName" type="text" class="form-control" id="Username" @blur="validUserName" required>
-                        <p id="username-invalid" v-show="validName" style="color: red">
+                        <label for="userName" class="form-label">Username</label>
+                        <input v-model="registerForm.userName" type="text" class="form-control" id="userName" name="userName" @blur="validUserName" required>
+                        <p id="username-invalid" v-show="invalidName" style="color: red">
                             Invalid username, it should be in the range of 5-15</p>
                         <p id="username-duplicate" v-show="false" style="color: red">This username has been registered</p>
                     </div>
                     <div class="mb-3 align-self-start">
-                        <label for="userInputEmail1" class="form-label">Email address</label>
-                        <input v-model="registerForm.email" type="email" class="form-control" id="userInputEmail1" required>
+                        <label for="email" class="form-label">Email address</label>
+                        <input v-model="registerForm.email" type="email" class="form-control" id="email" name="email" required>
                     </div>
                     <div class="mb-3 align-self-start">
-                        <label for="userInputPassword" class="form-label">Password</label>
-                        <input v-model="registerForm.password" type="password" class="form-control" id="userInputPassword"  required>
+                        <label for="password" class="form-label">Password</label>
+                        <input v-model="registerForm.password" type="password" class="form-control" @blur="validPwd"
+                               id="password" name="password" required>
+                        <p id="password-invalid"></p>
                     </div>
                     <div class="mb-3 align-self-start">
-                        <label for="userConfirmPassword" class="form-label">Confirm password</label>
+                        <label for="confirmPassword" class="form-label">Confirm password</label>
                         <input v-model="registerForm.confirmPassword" @blur="pwdNotSame()"
-                        type="password" class="form-control" id="userConfirmPassword" required>
+                        type="password" class="form-control" id="confirmPassword" name="confirmPassword" required >
                         <p id="password-not-confirm" style="color: red;" v-show="ifDisplay">Your password is not consistent</p>
                     </div>
                     <div class="login-button-box">
-                        <button type="submit" id="registerButton" class="btn btn-primary" @click="register" >Register</button>
+                        <button type="submit" id="registerButton" class="btn btn-primary" >Register</button>
                     </div>
                 </form>
             </div>
@@ -40,8 +42,6 @@
 </template>
 <script>
     import axios from 'axios';
-
-
     export default {
         name: 'Register',
         data(){
@@ -52,7 +52,7 @@
                     password: '',
                     confirmPassword: ''
                 },
-                validName: false,
+                invalidName: false,
                 validPassword: false,
                 ifDisplay: false,
             }
@@ -61,40 +61,40 @@
         //改变立刻调用一次该函数
         watch:{
             //隐式发送userName至服务器，查找有无重名
-            'registerForm.userName':function () {
+            'registerForm.userName':function (value) {
                 console.log(this.registerForm.userName)
+                console.log(value)
                 axios.request({
-                    url:'',
+                    url:'https://jsonplaceholder.typicode.com/users',
                     method:'post',
-                    headers:{
-                        'Content-type':'text/plain'
-                    },
-                    data:this.registerForm.userName
+                    data:{
+                        userName: this.registerForm.userName
+                    }
                 }).then(response => console.log(response.data))
             }
         },
         methods:{
-            register() {
-                console.log("register is clicked")
-                const result=axios.request({
-                    url:'',
-                    method:'post',
-                    headers:{
-                        'Content-type':'text/plain'
-                    },
-                    data: this.registerForm
-                });
-                console.log(result)
-            },
             validUserName(){
+                const button = document.getElementById("registerButton")
                 if(this.registerForm.userName.length>15 || this.registerForm.userName.length<5){
-                    this.validName=true
+                    this.invalidName=true
+                    button.disabled="disabled"
                 }else {
-                    this.validName=false
+                    this.invalidName=false
+                    button.disabled=""
                 }
             },
             validPwd(){
-
+                const button = document.getElementById("registerButton")
+                const p=document.getElementById("password-invalid")
+                if (this.registerForm.password.length<8 || this.registerForm.password.length>20){
+                    p.innerHTML="The password should be in the range of 8-20"
+                    p.style.color="red"
+                    button.disabled="disabled"
+                }else {
+                    p.innerHTML=""
+                    button.disabled=""
+                }
             },
             pwdNotSame() {
                 const button = document.getElementById("registerButton")
