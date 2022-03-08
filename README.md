@@ -1,4 +1,13 @@
-### 尝试了corsheader跨域接收register.vue的post过来的用户输入email与密码，并导入数据库，返回一个‘success’的http响应，但是目前log显示接受的是空内容，数据库存入的也是空内容，需要解决
+### 3/7跟进： 前后端同步了文件路径和请求ip端口， 更新了渲染忘记密码页面代码
+### 问题： 可以启动服务器，但是渲染页面时再次遇到找不到js、css文件: 
+`请看‘bug log.txt’文件`
+
+---
+
+#### 3/4尝试了corsheader跨域接收register.vue的post过来的用户输入email与密码，并导入数据库，返回一个‘success’的http响应，但是目前log显示接受的是空内容，数据库存入的也是空内容，需要解决
+
+---
+
 # Group-38
 
 ## Run the Project

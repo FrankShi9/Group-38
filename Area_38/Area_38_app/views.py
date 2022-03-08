@@ -61,3 +61,9 @@ def register(request):
         logger.info(password)
 
         return HttpResponse("Register success")
+
+
+def forget(request):
+    # if GET, simply render templates
+    if request.method == "GET":
+        return render(request, "index.html")
