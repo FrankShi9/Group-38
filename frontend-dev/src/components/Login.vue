@@ -3,22 +3,25 @@
 
         <div class="row align-items-center">
             <div class="col-6 offset-3">
-                <form>
+                <form method="post" action="/Area_38_app/views.py">
                     <!-- website logo -->
                     <div class="avatar-box">
                         <img src="../assets/logo.png" alt="" >
                     </div>
                     <div class="mb-3 align-self-start">
-                        <label for="userInputEmail1" class="form-label">Email address</label>
-                        <input v-model="loginForm.email" type="email" class="form-control" id="userInputEmail1" required>
+                        <label for="email" class="form-label">Email address</label>
+                        <input v-model="loginForm.email" type="email" class="form-control" id="email" name="email" required>
                     </div>
 
                     <div class="mb-3 align-self-start">
-                        <label for="userInputPassword" class="form-label">Password</label>
-                        <input v-model="loginForm.password" type="password" class="form-control" id="userInputPassword" required>
+                        <label for="password" class="form-label">Password</label>
+                        <input v-model="loginForm.password" type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div>
+                        <p><a href="./Register">Register</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="Forget">Forget password</a></p>
                     </div>
                     <div class="login-button-box">
-                        <button type="submit" class="btn btn-primary" @click="login">Log in</button>
+                        <button type="submit" class="btn btn-primary">Login</button>
                     </div>
                 </form>
 
@@ -42,21 +45,6 @@
             }
         },
         methods:{
-            login(event) {
-                event.preventDefault()
-                console.log("login is clicked")
-
-
-                axios.post(
-                    'https://jsonplaceholder.typicode.com/users',
-                    {
-                        email: this.loginForm.email,
-                        password: this.loginForm.password
-                    }
-                )
-                .then(response => console.log(response.data))
-                .catch(error => console.log(error))
-            }
         }
     }
 </script>
