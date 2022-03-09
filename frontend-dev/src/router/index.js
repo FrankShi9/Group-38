@@ -12,11 +12,11 @@ const routes = [
     component: Login
   },
   {
-    path: '/Register',
+    path: '/register',
     component: Register
   },
   {
-    path: '/Forget',
+    path: '/forget',
     component: Forget
   }
 ]

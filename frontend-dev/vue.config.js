@@ -1,21 +1,16 @@
 const { defineConfig } = require('@vue/cli-service')
+const path = require('path')
 module.exports = defineConfig({
-    transpileDependencies: true,
-    outputDir: '../Area_38/static/',
-    indexPath: '../Area_38/templates/index.html', // relative to outputDir!
-    // baseUrl: IS_PRODUCTION
-    // ? 'http://cdn123.com'
-    // : '/',
-    // For Production, replace set baseUrl to CDN
-    // And set the CDN origin to `yourdomain.com/static`
-    // Whitenoise will serve once to CDN which will then cache
-    // and distribute
+    outputDir: 'dist',
+    assetsDir: 'static',
+    indexPath: "templates/index.html",
+    filenameHashing: false, // Django will hash file names, not webpack
+    runtimeCompiler: true, // See: https://vuejs.org/v2/guide/installation.html#Runtime-Compiler-vs-Runtime-only
     devServer: {
-        proxy: {
-            '/api*': {
-                // Forward frontend dev server request for /api to django dev server
-                target: 'http://localhost:8000/',
-            }
-        }
-    }
+        writeToDisk: true, // Write files to disk in dev mode, so Django can serve the assets
+    },
+    // Paths
+    // publicPath: '/',
+    // outputDir: '../Area_38/dist/static',
+    // indexPath: '../index.html', // relative to outputDir!
 })
