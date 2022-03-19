@@ -49,18 +49,23 @@ def login(request):
 def register(request):
     # if GET, simply render templates
     if request.method == "GET":
+        print('we are here!')
         return render(request, "index.html")
 
     if request.method == "POST":
+        userName = request.POST.get("userName")
         email = request.POST.get("email")
         password = request.POST.get("password")
-        # user_obj = models.UserInfo.objects.create(email=email, password=password)
-        user_obj = UserInfo(email=email, password=password)
+        print('userName:', userName)
+        print('email:', email)
+        print('passwd:', password)
+        #user_obj = UserInfo(email=email, password=password)
+        user_obj = models.UserInfo.objects.create(email=email, password=password)
         user_obj.save()
-        logger.info(email)
-        logger.info(password)
+        #logger.info(email)
+        #logger.info(password)
 
-        return HttpResponse("Register success")
+        return redirect('/login')
 
 
 def forget(request):
