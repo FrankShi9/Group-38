@@ -14,14 +14,27 @@
 
 `pip install -r requirements.txt `
 
-运行
+注意：
+先运行服务器
 ```
 cd Area_38
 python manage.py runserver
 ```
-
-
-
+看到生成```db.sqlite3```文件
+然后不要输入操作，在控制台按```Ctrl+C```停止服务器
+然后执行以下数据库更新操作
+```
+python manage.py makemigrations
+python manage.py migrate
+```
+最后启动服务器，正常测试
+```
+python manage.py runserver
+```
+浏览器输入
+```
+http://127.0.0.1:8000/register
+```
 
 ## 查看数据库
 
