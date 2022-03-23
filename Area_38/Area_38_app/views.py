@@ -36,6 +36,10 @@ def login(request):
         password = request.POST.get("password")
 
         user_obj = models.UserInfo.objects.filter(email=email, password=password).first()
+        if user_obj is not None:
+            return HttpResponse('Login success, go to dashboard')
+        else:
+            return HttpResponse('Login failed')
 
     # TODO
     # if not user_obj:
@@ -59,16 +63,28 @@ def register(request):
         print('userName:', userName)
         print('email:', email)
         print('passwd:', password)
+        user_obj = models.UserInfo.objects.filter(email=email, password=password).first()
         #user_obj = UserInfo(email=email, password=password)
-        user_obj = models.UserInfo.objects.create(email=email, password=password)
-        user_obj.save()
-        #logger.info(email)
-        #logger.info(password)
+        if user_obj is not None:
+            print('register failed, user already exists')
+            return HttpResponse('register failed, user already exists')
 
-        return redirect('/login')
+        else:
+            user_obj = models.UserInfo.objects.create(email=email, password=password)
+            user_obj.save()
+            #logger.info(email)
+            #logger.info(password)
+
+            return redirect('/login')
 
 
 def forget(request):
+    # if GET, simply render templates
+    if request.method == "GET":
+        return render(request, "index.html")
+
+
+def SDChart(request):
     # if GET, simply render templates
     if request.method == "GET":
         return render(request, "index.html")
