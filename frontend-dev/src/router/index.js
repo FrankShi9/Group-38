@@ -2,6 +2,7 @@ import { createRouter, createWebHistory} from 'vue-router'
 import Login from '@/components/Login.vue'
 import Register from "@/components/Register";
 import Forget from "@/components/Forget";
+import SDChart from "@/components/SDChart";
 
 const routes = [
   {
@@ -18,6 +19,10 @@ const routes = [
   {
     path: '/Forget',
     component: Forget
+  },
+  {
+    path: '/SDChart',
+    component: SDChart
   }
 ]
 

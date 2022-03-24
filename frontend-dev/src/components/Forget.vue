@@ -33,16 +33,14 @@
 </template>
 
 <script>
-    //import nodemailer from 'nodemailer'
+    //import {SMTPClient} from 'emailjs'
 
-    // const transporter=nodemailer.createTransport({
-    //     host: "",
-    //     port: 465,
-    //     secureConnection:false,
-    //     auth: {
-    //         "user":"",
-    //         "pass":""
-    //     }
+    // const client=new SMTPClient({
+    //     user:'',
+    //     password:'',
+    //     host:'',
+    //     port:'',
+    //     ssl:true
     // })
     export default {
         name: "Forget",
@@ -55,24 +53,20 @@
                 }
             }
         },
-        // methods:{
-        //     send(){
-        //
-        //         const mailOptions={
-        //             from: "",
-        //             to:"",
-        //             subject:"",
-        //             title:"",
-        //             code: this.forgetForm.code
-        //         }
-        //         transporter.sendMail(mailOptions,function (error,info){
-        //             if (error){
-        //                 console.log(error)
-        //             }
-        //             console.log('Message send: %s', info.messageId);
-        //         })
-        //     }
-        // }
+        methods:{
+            // async send(){
+            //     try {
+            //         await client.sendAsync({
+            //             text:"Hello world",
+            //             from:'',
+            //             to:"",
+            //             subject:''
+            //         })
+            //     }catch (e){
+            //         console.log(e)
+            //     }
+            // }
+        }
     }
 </script>
 

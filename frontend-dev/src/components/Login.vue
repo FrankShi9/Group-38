@@ -3,7 +3,7 @@
 
         <div class="row align-items-center">
             <div class="col-6 offset-3">
-                <form method="post" action="./views.py">
+                <form method="post">
                     <!-- website logo -->
                     <div class="avatar-box">
                         <img src="../assets/logo.png" alt="" >
@@ -18,7 +18,9 @@
                         <input v-model="loginForm.password" type="password" class="form-control" id="password" name="password" required>
                     </div>
                     <div>
-                        <p><a href="./Register">Register</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="Forget">Forget password</a></p>
+                        <p><a href="../register">Register</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="../forget">Forget password</a></p>
                     </div>
                     <div class="login-button-box">
                         <button type="submit" class="btn btn-primary">Login</button>
@@ -32,8 +34,6 @@
 </template>
 
 <script>
-    import axios from 'axios';
-
     export default {
         name: 'Login',
         data() {
