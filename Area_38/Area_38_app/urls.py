@@ -8,4 +8,5 @@ urlpatterns = [
     path('register/', views.register),
     path('forget/', views.forget),
     path('SDChart/', views.SDChart),
+    path('uploadfile/', views.uploadfile),
 ]

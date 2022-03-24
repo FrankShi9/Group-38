@@ -1,3 +1,5 @@
+import os
+
 from django.shortcuts import render, redirect
 
 from rest_framework.views import APIView
@@ -88,3 +90,21 @@ def SDChart(request):
     # if GET, simply render templates
     if request.method == "GET":
         return render(request, "index.html")
+
+def uploadfile(request):
+    # if GET, simply render templates
+    if request.method == "GET":
+        return render(request, "index.html")
+
+    if request.method == "POST":
+        file = request.POST.get('file')
+        if not file:
+            return HttpResponse("file not found")
+        uploadfilepath = "./upload"
+        if not os.path.exists(uploadfilepath):
+            os.makedirs(uploadfilepath)
+        position = os.path.join(uploadfilepath, file.name)
+        storage = open(position, 'wb')
+        for chunk in file.chunks():
+            storage.write(chunk)
+        storage.close()
