@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory} from 'vue-router'
-import Login from '@/components/Login.vue'
+import Login from '@/components/Login'
 import Register from "@/components/Register";
 import Forget from "@/components/Forget";
 import SDChart from "@/components/SDChart";
+import Uploadfile from '@/components/Uploadfile'
 
 const routes = [
   {
@@ -13,16 +14,20 @@ const routes = [
     component: Login
   },
   {
-    path: '/Register',
+    path: '/register',
     component: Register
   },
   {
-    path: '/Forget',
+    path: '/forget',
     component: Forget
   },
   {
     path: '/SDChart',
     component: SDChart
+  },
+  {
+    path: '/uploadfile',
+    component: Uploadfile
   }
 ]
 
