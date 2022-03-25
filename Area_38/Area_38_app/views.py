@@ -97,8 +97,9 @@ def uploadfile(request):
         return render(request, "index.html")
 
     if request.method == "POST":
-        file = request.POST.get('file')
+        file = request.FILES.get('file')
         if not file:
+            print("no file")
             return HttpResponse("file not found")
         uploadfilepath = "./upload"
         if not os.path.exists(uploadfilepath):
