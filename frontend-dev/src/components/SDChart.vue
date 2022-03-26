@@ -1,6 +1,7 @@
 <template>
-    <div class="mb-3 align-self-start" id="main">
-
+    <div class="mb-3 align-self-start" id="main"></div>
+    <div class="mb-3 align-self-start">
+        <input type="range">
     </div>
 </template>
 
@@ -34,44 +35,122 @@
         UniversalTransition,
         CanvasRenderer
     ]);
+
     import $ from 'jquery'
-    $(document).ready(function(){
-        const myChart=echarts.init(document.getElementById("main"))
-        myChart.setOption({
-            title: {
-                text: 'ECharts 入门示例'
-            },
-            tooltip: {},
-            xAxis: {
-                data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
-            },
-            yAxis: {},
-            series: [
-                {
-                    name: '销量',
-                    type: 'bar',
-                    data: [5, 20, 36, 10, 10, 20]
-                }
-            ]
-        })
-        window.onresize=function(){
-            myChart.resize()
-        }
-    });
+
+
 
     export default {
         name: "SDChart",
         data(){
             return{
-
+                chart: undefined,
+                coefficient : undefined
             }
+        },
+        created() {
+            let url = this.$route.query
+            this.coefficient=url.k;
+
+            function func(x) {
+                return url.k/x
+            }
+
+            function generateData() {
+                let data = [];
+                for (let i = 0; i <= 200; i += 0.1) {
+                    data.push([i, func(i)]);
+                }
+                return data;
+            }
+
+            const option = {
+                animation: false,
+                grid: {
+                    top: 40,
+                    left: 50,
+                    right: 40,
+                    bottom: 50
+                },
+                xAxis: {
+                    name: 'x',
+                    min: 0,
+                    max: 20,
+                    minorTick: {
+                        show: true
+                    },
+                    minorSplitLine: {
+                        show: true
+                    }
+                },
+                yAxis: {
+                    name: 'y',
+                    min: 0,
+                    max: 20,
+                    minorTick: {
+                        show: true
+                    },
+                    minorSplitLine: {
+                        show: true
+                    }
+                },
+                // dataZoom: [
+                //     {
+                //         show: true,
+                //         //type: 'inside',
+                //         filterMode: 'none',
+                //         xAxisIndex: [0],
+                //         startValue: -20,
+                //         endValue: 20
+                //     },
+                //     {
+                //         show: true,
+                //         //type: 'inside',
+                //         filterMode: 'none',
+                //         yAxisIndex: [0],
+                //         startValue: -20,
+                //         endValue: 20
+                //     }
+                // ],
+                series: [
+                    {
+                        type: 'line',
+                        showSymbol: false,
+                        clip: false,
+                        data: generateData(),
+                        areaStyle:{
+
+                        }
+                    }
+                ]
+            };
+
+            $(document).ready(function(){
+                this.chart=echarts.init(document.getElementById("main"))
+                this.chart.setOption(option)
+                window.onresize=function(){
+                    this.chart.resize()
+                }
+
+                // this.chart.getZr().on('click',function (params){
+                //     console.log(params)
+                // })
+                this.chart.on('click',function(params){
+                    console.log(params)
+                })
+            });
+
+        },
+        updated() {
+
         }
     }
 </script>
 
 <style lang="scss" scoped>
 #main{
-    width: 600px;
+    width: 1000px;
     height:400px;
+    margin: 20px;
 }
 </style>
