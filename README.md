@@ -22,8 +22,8 @@ https://github.com/FrankShi9/Group-38/tree/frontend-dev
 还是在这个仓库里，我新建了一个分支。
 
 ## 机器学习资源
--https://www.educative.io/blog/scikit-learn-cheat-sheet-classification-regression-methods
--https://www.kaggle.com/code/frankshi9/pawpularity-eda-some-models?scriptVersionId=83791915
--https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsRegressor.html
--https://scikit-learn.org/stable/modules/cross_validation.html
--https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.KFold.html
+1. https://www.educative.io/blog/scikit-learn-cheat-sheet-classification-regression-methods
+2. https://www.kaggle.com/code/frankshi9/pawpularity-eda-some-models?scriptVersionId=83791915
+3. https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsRegressor.html
+4. https://scikit-learn.org/stable/modules/cross_validation.html
+5. https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.KFold.html
