@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import HttpResponse
-
+from django.http import HttpResponse
 from .models import User
 from .serializer import LoginSerializer
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -39,7 +39,10 @@ def login(request):
 
         user_obj = models.UserInfo.objects.filter(email=email, password=password).first()
         if user_obj is not None:
-            return HttpResponse('Login success, go to dashboard')
+            response = HttpResponse('Login success, go to dashboard')
+            response.set_cookie("is_login", True, max_age=60*60*24)
+            response.set_cookie("email", email, max_age=60*60*24)
+            return response
         else:
             return HttpResponse('Login failed')
 
@@ -85,6 +88,11 @@ def forget(request):
     if request.method == "GET":
         return render(request, "index.html")
 
+def logout(request):
+    response = redirect('/login/')
+    response.delete_cookie("is_login")
+    response.delete_cookie("email")
+    return
 
 def SDChart(request):
     # if GET, simply render templates
@@ -101,7 +109,15 @@ def uploadfile(request):
         if not file:
             print("no file")
             return HttpResponse("file not found")
-        uploadfilepath = "./upload"
+        status = request.COOKIES.get('is_login')
+        print(request.COOKIES)
+        if status == "True":
+            print("already login")
+            user_email = request.COOKIES.get("email")
+        else:
+            print("didn't login")
+            return HttpResponse("login required")
+        uploadfilepath = "./"+user_email+"/upload"
         if not os.path.exists(uploadfilepath):
             os.makedirs(uploadfilepath)
         position = os.path.join(uploadfilepath, file.name)
@@ -109,3 +125,4 @@ def uploadfile(request):
         for chunk in file.chunks():
             storage.write(chunk)
         storage.close()
+        return HttpResponse("file uploaded")
