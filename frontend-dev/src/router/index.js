@@ -4,6 +4,9 @@ import Register from "@/components/Register";
 import Forget from "@/components/Forget";
 import SDChart from "@/components/SDChart";
 import Uploadfile from '@/components/Uploadfile'
+import ChooseFunc from "@/components/ChooseFunc";
+import RFMChart from "@/components/RFMChart";
+import TSChart from "@/components/TSChart";
 
 const routes = [
   {
@@ -28,6 +31,18 @@ const routes = [
   {
     path: '/uploadfile',
     component: Uploadfile
+  },
+  {
+    path: '/chooseFunc',
+    component: ChooseFunc
+  },
+  {
+    path: '/RFMChart',
+    component: RFMChart
+  },
+  {
+    path:'/TSChart',
+    component: TSChart
   }
 ]
 

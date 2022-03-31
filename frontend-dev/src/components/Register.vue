@@ -7,7 +7,7 @@
                 <div class="avatar-box">
                     <img src="../assets/logo.png" alt="" >
                 </div>
-                <form method="post">
+                <form method="post" action="https://jsonplaceholder.typicode.com/users">
                     <div class="mb-3 align-self-start">
                         <label for="userName" class="form-label">Username</label>
                         <input v-model="registerForm.userName" type="text" class="form-control" id="userName" name="userName" @blur="validUserName" required>
@@ -68,11 +68,12 @@
                 console.log(123)
                 axios.request({
                     method:"post",
-                    url:'',
-                    date:{
-                        email: this.registerForm.email
-                    }
+                    url:'https://jsonplaceholder.typicode.com/users',
+                    data:{
+                        'email': this.registerForm.email
+                    },
                 }).then(response => {
+                    console.log(123)
                     console.log(response.data)
                     if (response.data){
                         this.duplicateName=false
