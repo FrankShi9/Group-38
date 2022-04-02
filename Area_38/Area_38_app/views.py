@@ -428,7 +428,15 @@ def xts(request):
     plt.ylabel('Price')
     plt.legend()
     plt.savefig('foo.png')
+
     # import os
     # dirspot = os.getcwd()
     # print(dirspot)
-    return HttpResponse('success')
+
+    import base64
+    with open('foo.png', "rb") as image_file:
+        image_data = base64.b64encode(image_file.read()).decode('utf-8')
+    #print(image_data)
+    #return HttpResponse('success')
+    return HttpResponse(image_data)
+    #return HttpResponse(json.dumps(image_data))
