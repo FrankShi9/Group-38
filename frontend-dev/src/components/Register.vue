@@ -7,7 +7,7 @@
                 <div class="avatar-box">
                     <img src="../assets/logo.png" alt="" >
                 </div>
-                <form method="post" action="https://jsonplaceholder.typicode.com/users">
+                <form method="post" action="">
                     <div class="mb-3 align-self-start">
                         <label for="userName" class="form-label">Username</label>
                         <input v-model="registerForm.userName" type="text" class="form-control" id="userName" name="userName" @blur="validUserName" required>

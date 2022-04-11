@@ -7,6 +7,7 @@ import Uploadfile from '@/components/Uploadfile'
 import ChooseFunc from "@/components/ChooseFunc";
 import RFMChart from "@/components/RFMChart";
 import TSChart from "@/components/TSChart";
+import Waiting from "@/components/Waiting";
 
 const routes = [
   {
@@ -43,6 +44,10 @@ const routes = [
   {
     path:'/TSChart',
     component: TSChart
+  },
+  {
+    path: '/Waiting',
+    component: Waiting
   }
 ]
 

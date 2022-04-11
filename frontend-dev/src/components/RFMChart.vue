@@ -20,11 +20,6 @@
             let arg=JSON.parse(url)
             let keys=Object.keys(arg)
             let values=Object.values(arg)
-            // for (const key in arg) {
-            //     keys.push(key)
-            //     console.log(Object.keys(arg)[0])
-            // }
-            console.log(keys)
 
             function generator(){
                 const data=[]
@@ -41,61 +36,6 @@
                     {
                         type: 'treemap',
                         data: generator()
-                        //     [
-                        //     {
-                        //         name: 'Activate them',
-                        //         value: 392,
-                        //         // children: [
-                        //         //     {
-                        //         //         name: 'nodeAa',
-                        //         //         value: 4
-                        //         //     },
-                        //         //     {
-                        //         //         name: 'nodeAb',
-                        //         //         value: 6
-                        //         //     }
-                        //         // ]
-                        //     },
-                        //     {
-                        //         name: 'Champions',
-                        //         value: 421,
-                        //         // children: [
-                        //         //     {
-                        //         //         name: 'nodeBa',
-                        //         //         value: 20,
-                        //         //         children: [
-                        //         //             {
-                        //         //                 name: 'nodeBa1',
-                        //         //                 value: 20
-                        //         //             }
-                        //         //         ]
-                        //         //
-                        //         //
-                        //         //
-                        //         //     }
-                        //         // ]
-                        //     },
-                        //     {
-                        //         name: 'Do not lose them',
-                        //         value: 1690
-                        //     },
-                        //     {
-                        //         name: 'Loyal',
-                        //         value: 447
-                        //     },
-                        //     {
-                        //         name: 'Pay attention',
-                        //         value: 391
-                        //     },
-                        //     {
-                        //         name: 'Potential',
-                        //         value: 468
-                        //     },
-                        //     {
-                        //         name: 'Promising',
-                        //         value: 517
-                        //     }
-                        // ]
                     }
                 ]
             };

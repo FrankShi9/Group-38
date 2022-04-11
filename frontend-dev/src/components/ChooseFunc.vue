@@ -26,7 +26,6 @@
 <script>
     import axios from "axios";
     import $ from 'jquery';
-    import 'jquery-confirm'
 
     const formObj=$("#hiddenDiv")
     const form=formObj.clone()

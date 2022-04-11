@@ -30,9 +30,8 @@
                 tooltip : {
                     trigger: 'axis',
                     showContent: true,
-                    enterable: true,
                     formatter: function (params){
-                        let str = params[0].data[0] + "<br />";
+                        let str = Math.round(params[0].data[0]) + "<br />";
                         params.forEach((item) => {
                             str +=
                                 '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:'+item.color+'"></span>' + 'Revenue' + " : " + Math.round(item.data[0]*item.data[1]) + "<br />";

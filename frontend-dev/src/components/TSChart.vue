@@ -1,12 +1,28 @@
 <template>
     <div class="mb-3 align-self-start" id="main">
-        <img src="../Area_38_app/foo.png">
+        <img :src="codeImg" alt=""/>
     </div>
 </template>
 
 <script>
     export default {
         name: "TSChart",
+        data(){
+            return{
+                codeImg: ""
+
+            }
+        },
+        created() {
+            this.getImgCode()
+        },
+        methods:{
+            getImgCode(){
+                let url=localStorage.getItem('key')
+                console.log(url)
+                this.codeImg="data:image/png;base64,"+url
+            }
+        }
     }
 </script>
 
