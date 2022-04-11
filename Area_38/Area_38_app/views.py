@@ -22,6 +22,9 @@ import os
 from django.http import JsonResponse
 import json
 
+import io
+from django.http import FileResponse
+from reportlab.pdfgen import canvas
 
 def login(request):
     # if GET, simply render templates
@@ -128,16 +131,18 @@ def uploadfile(request):
         if not file:
             print("no file")
             return HttpResponse("file not found")
+
         status = request.COOKIES.get('is_login')
         print(request.COOKIES)
         if status == "True":
             print("already login")
             user_email = request.COOKIES.get("email")
+            uploadfilepath = "./" + user_email + "/upload"
         else:
             print("didn't login")
-            return HttpResponse("login required")
+            #return HttpResponse("login required")
+            uploadfilepath = "./upload"
 
-        uploadfilepath = "./" + user_email + "/upload"
         if not os.path.exists(uploadfilepath):
             os.makedirs(uploadfilepath)
         position = os.path.join(uploadfilepath, file.name)
@@ -160,8 +165,16 @@ def uploadfile(request):
 def demand(request):
     import pandas as pd
     import numpy as np
-    user_email = request.COOKIES.get("email")
-    demand = pd.read_csv(user_email + '/upload/demand.csv')
+
+    status = request.COOKIES.get('is_login')
+    if status == "True":
+        print("demand already login")
+        user_email = request.COOKIES.get("email")
+        uploadfilepath = "./" + user_email + "/upload/"
+    else:
+        uploadfilepath = "./upload/"
+
+    demand = pd.read_csv(uploadfilepath+'demand.csv')
     # print(demand.head(10))
 
     # curve-fit() function from scipy
@@ -191,12 +204,12 @@ def demand(request):
     print(min(demand['Price']), max(demand['Price']))
 
     # return redirect('/SDChart?a='+str(param[0])+'&b='+str(param[1])+'&c='+str(min(demand['Quantity']))+'&d='+str(max(demand['Quantity']))+'&e='+str(min(demand['Price']))+'&f='+str(max(demand['Price'])))
-    data = {'a': str(param[0]),
-            'b': str(param[1]),
-            'c': str(min(demand['Quantity'])),
-            'd': str(max(demand['Quantity'])),
-            'e': str(min(demand['Price'])),
-            'f': str(max(demand['Price'])),
+    data = {'a': (param[0]),
+            'b': (param[1]),
+            'c': (min(demand['Quantity'])),
+            'd': (max(demand['Quantity'])),
+            'e': (min(demand['Price'])),
+            'f': (max(demand['Price'])),
             }
     # return JsonResponse(data)
     # return HttpResponse(data)
@@ -212,8 +225,15 @@ def rfm(request):
     import squarify
 
     # Load Dataset
-    user_email = request.COOKIES.get("email")
-    data = pd.read_csv(user_email + '/upload/rfm.csv', encoding='ISO-8859-1')
+    status = request.COOKIES.get('is_login')
+    if status == "True":
+        print("rfm already login")
+        user_email = request.COOKIES.get("email")
+        uploadfilepath = "./" + user_email + "/upload/"
+    else:
+        uploadfilepath = "./upload/"
+
+    data = pd.read_csv(uploadfilepath+'rfm.csv', encoding='ISO-8859-1')
 
     pd.set_option('display.max_columns', None)
     pd.set_option('display.max_rows', None)
@@ -387,8 +407,13 @@ def xts(request):
     import pandas as pd
     from sklearn.preprocessing import MinMaxScaler
 
+    status = request.COOKIES.get('is_login')
+
+    print("xts already login")
     user_email = request.COOKIES.get("email")
-    data = pd.read_csv(user_email + '/upload/BTC-USD.csv', date_parser=True)
+    uploadfilepath = "./" + user_email + "/upload/"
+
+    data = pd.read_csv(uploadfilepath+'BTC-USD.csv', date_parser=True)
     data_training = data[data['Date'] < '2020-01-01'].copy()
     data_test = data[data['Date'] < '2020-01-01'].copy()
     training_data = data_training.drop(['Date', 'Adj Close'], axis=1)
@@ -440,3 +465,38 @@ def xts(request):
     #return HttpResponse('success')
     return HttpResponse(image_data)
     #return HttpResponse(json.dumps(image_data))
+
+
+# All pdf down button redirect to this one
+def pdf_down(request):
+    # Create a file-like buffer to receive PDF data.
+    buffer = io.BytesIO()
+
+    # Create the PDF object, using the buffer as its "file."
+    p = canvas.Canvas(buffer)
+
+    # Draw things on the PDF. Here's where the PDF generation happens.
+    # See the ReportLab documentation for the full list of functionality.
+    p.drawString(100, 100, "Your analysis report")
+    p.drawImage('./foo.png', 5, 1024)
+
+    # Close the PDF object cleanly, and we're done.
+    p.showPage()
+    p.save()
+
+    # FileResponse sets the Content-Disposition header so that browsers
+    # present the option to save the file.
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='report.pdf')
+
+# update after lyx template
+def f0f(request):
+    # if GET, simply render templates
+    if request.method == "GET":
+        return render(request, "404.html")
+
+
+def f00(request):
+    # if GET, simply render templates
+    if request.method == "GET":
+        return render(request, "500.html")
