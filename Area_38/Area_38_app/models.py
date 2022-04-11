@@ -9,7 +9,7 @@ class UserInfo(models.Model):
 
 
 class UserFile(models.Model):
-    userEmail = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
+    userEmail = models.ForeignKey(UserInfo, on_delete=models.CASCADE,to_field='email')
     file = models.FileField(upload_to='', null=True)
     fileDescription = models.CharField(max_length=200, null=True)
     uploadDate = models.DateTimeField(default=timezone.now, blank=True)
