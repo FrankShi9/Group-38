@@ -138,7 +138,6 @@ def uploadfile(request):
                                                       file=request.FILES.get('file'),
                                                       uploadDate=datetime.datetime.now())
             user_obj.save()
-            print(UserFile.objects.get(userEmail=user_email).file)
         elif funcNum == str(3):
             print("need login")
             return HttpResponse("login required")
