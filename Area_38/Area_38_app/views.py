@@ -134,6 +134,7 @@ def uploadfile(request):
         if status == "True":
             print("already login")
             user_email = request.COOKIES.get("email")
+            #store in database
             user_obj = models.UserFile.objects.create(userEmail=UserInfo.objects.get(email=user_email),
                                                       file=request.FILES.get('file'),
                                                       uploadDate=datetime.datetime.now())
