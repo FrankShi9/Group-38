@@ -138,7 +138,7 @@ def uploadfile(request):
             return HttpResponse("login required")
 
         if status == "True":
-            
+
         uploadfilepath = "./" + user_email + "/upload"
         if not os.path.exists(uploadfilepath):
             os.makedirs(uploadfilepath)
