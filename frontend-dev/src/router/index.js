@@ -8,6 +8,7 @@ import ChooseFunc from "@/components/ChooseFunc";
 import RFMChart from "@/components/RFMChart";
 import TSChart from "@/components/TSChart";
 import Waiting from "@/components/Waiting";
+import Model from "@/components/Model";
 
 const routes = [
   {
@@ -48,7 +49,11 @@ const routes = [
   {
     path: '/Waiting',
     component: Waiting
+  },
+  {
+    component: Model
   }
+
 ]
 
 const router = createRouter({

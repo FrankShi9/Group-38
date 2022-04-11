@@ -19,6 +19,7 @@
         methods:{
             getImgCode(){
                 let url=localStorage.getItem('key')
+                localStorage.clear()
                 console.log(url)
                 this.codeImg="data:image/png;base64,"+url
             }
