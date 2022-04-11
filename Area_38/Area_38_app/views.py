@@ -133,11 +133,13 @@ def uploadfile(request):
         if status == "True":
             print("already login")
             user_email = request.COOKIES.get("email")
+            user_obj = models.UserFile.objects.create(userEmail=UserInfo.objects.get(email=user_email),
+                                                      file=request.FILES.get('file'),
+                                                      uploadDate=datetime.datetime.now())
+            user_obj.save()
         elif funcNum == str(3):
             print("need login")
             return HttpResponse("login required")
-
-        if status == "True":
 
         uploadfilepath = "./" + user_email + "/upload"
         if not os.path.exists(uploadfilepath):
