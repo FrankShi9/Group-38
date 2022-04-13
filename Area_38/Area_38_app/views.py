@@ -166,6 +166,21 @@ def uploadfile(request):
             return redirect('/xts')
 
 
+def history(request):
+    if request.method == "GET":
+        return render("index.html")
+    if request.COOKIES.get('is_login') == 'True':
+        user_email = request.COOKIES.get('email')
+        log_objs = models.UserLog.objects.filter(userEmail=user_email)
+        data = []
+        for i in log_objs:
+            temp = {'fileName': i.fileName, 'action': i.actionDescription, 'datetime': i.actionDate}
+            data.append(temp)
+        return HttpResponse(json.dumps(data))
+    else:
+        return HttpResponse('need login')
+
+
 def demand(request):
     import pandas as pd
     import numpy as np

@@ -20,3 +20,4 @@ class UserLog(models.Model):
     fileName = models.CharField(max_length=32)
     actionDescription = models.CharField(max_length=200, null=True)
     actionDate = models.DateTimeField(default=timezone.now, blank=True)
+    reportName = models.CharField(max_length=32, null=True)
