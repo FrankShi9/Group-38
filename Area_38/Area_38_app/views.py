@@ -449,3 +449,32 @@ def xts(request):
     #return HttpResponse('success')
     return HttpResponse(image_data)
     #return HttpResponse(json.dumps(image_data))
+
+
+def holt_winters():
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    from datetime import datetime
+    import pandas as pd
+    import numpy as np
+    from statsmodels.tsa.holtwinters import SimpleExpSmoothing
+    from statsmodels.tsa.holtwinters import ExponentialSmoothing
+
+    data = pd.read_csv("gold_price_data.csv")
+    data['Date'] = pd.to_datetime(data['Date'], format='%Y-%m-%d')
+    rNum = data.shape[0]
+    trainNum = int(rNum * 0.9)
+    predictNum = rNum - trainNum
+
+    train_hw = data["Value"][:trainNum]
+    test_hw = data["Value"][trainNum:]
+
+    future = ExponentialSmoothing(train_hw, trend='mul').fit()
+
+    forecast_hw = future.forecast(predictNum)
+
+    plt.figure(figsize=(16, 4))
+    plt.plot(train_hw, label='Train')
+    plt.plot(test_hw, label='Test')
+    plt.plot(forecast_hw, label='Forecast')
+    plt.legend(loc='best')
