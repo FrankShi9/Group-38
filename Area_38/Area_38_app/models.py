@@ -10,6 +10,13 @@ class UserInfo(models.Model):
 
 class UserFile(models.Model):
     userEmail = models.ForeignKey(UserInfo, on_delete=models.CASCADE,to_field='email')
-    file = models.FileField(upload_to='', null=True)
+    fileName = models.CharField(max_length=32)
     fileDescription = models.CharField(max_length=200, null=True)
     uploadDate = models.DateTimeField(default=timezone.now, blank=True)
+
+
+class UserLog(models.Model):
+    userEmail = models.ForeignKey(UserInfo, on_delete=models.CASCADE, to_field='email')
+    fileName = models.CharField(max_length=32)
+    actionDescription = models.CharField(max_length=200, null=True)
+    actionDate = models.DateTimeField(default=timezone.now, blank=True)

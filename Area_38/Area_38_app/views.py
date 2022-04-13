@@ -135,10 +135,13 @@ def uploadfile(request):
             print("already login")
             user_email = request.COOKIES.get("email")
             #store in database
-            user_obj = models.UserFile.objects.create(userEmail=UserInfo.objects.get(email=user_email),
-                                                      file=request.FILES.get('file'),
-                                                      uploadDate=datetime.datetime.now())
-            user_obj.save()
+            userfile_obj = models.UserFile.objects.create(userEmail=UserInfo.objects.get(email=user_email),
+                                                          fileName=file.name, uploadDate=datetime.datetime.now())
+            userfile_obj.save()
+            userlog_obj = models.UserLog.objects.create(userEmail=UserInfo.objects.get(email=user_email), fileName=file.name,
+                                                         actionDescription=str(funcNum),
+                                                         actionDate=datetime.datetime.now())
+
         elif funcNum == str(3):
             print("need login")
             return HttpResponse("login required")
