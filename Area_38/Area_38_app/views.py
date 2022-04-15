@@ -19,10 +19,12 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('Area_38_app')
 
+import io
 import os
 from django.http import JsonResponse
 import json
-
+from django.http import FileResponse
+from reportlab.pdfgen import canvas
 
 def login(request):
     # if GET, simply render templates
@@ -123,6 +125,12 @@ def uploadfile(request):
         return render(request, "index.html")
 
     if request.method == "POST":
+        if funcNum == str(1):
+            response = redirect('/demand')
+        elif funcNum == str(2):
+            response = redirect('/rfm')
+        elif funcNum == str(3):
+            response = redirect('/xts')
         file = request.FILES.get('file')
         # print(request.POST.get('funcNum'))
         # file = request.POST.get('file')
@@ -141,6 +149,8 @@ def uploadfile(request):
             userlog_obj = models.UserLog.objects.create(userEmail=UserInfo.objects.get(email=user_email), fileName=file.name,
                                                          actionDescription=str(funcNum),
                                                          actionDate=datetime.datetime.now())
+            userlog_obj.save()
+            response.set_cookie("filename", file.name, max_age=60 * 60 * 24)
 
         elif funcNum == str(3):
             print("need login")
@@ -158,12 +168,8 @@ def uploadfile(request):
         #print(funcNum, type(funcNum))
         # use if else to redirect 3 dif functions
 
-        if funcNum == str(1):
-            return redirect('/demand')
-        elif funcNum == str(2):
-            return redirect('/rfm')
-        elif funcNum == str(3):
-            return redirect('/xts')
+        return response
+
 
 
 def history(request):
@@ -465,6 +471,37 @@ def xts(request):
     return HttpResponse(image_data)
     #return HttpResponse(json.dumps(image_data))
 
+# All pdf down button redirect to this one
+def pdf_down(request):
+    # Create a file-like buffer to receive PDF data.
+    buffer = io.BytesIO()
+
+    # Create the PDF object, using the buffer as its "file."
+    p = canvas.Canvas(buffer)
+
+    # Draw things on the PDF. Here's where the PDF generation happens.
+    # See the ReportLab documentation for the full list of functionality.
+    p.drawString(100, 100, "Your analysis report")
+    p.drawImage('./foo.png', 5, 1024)
+
+    # Close the PDF object cleanly, and we're done.
+    p.showPage()
+    p.save()
+
+    # FileResponse sets the Content-Disposition header so that browsers
+    # present the option to save the file.
+    buffer.seek(0)
+    # Download to local
+    if request.COOKIES.get('is_login') == 'True':
+        reportName = request.COOKIES.get('fileName') + '_report.pdf'
+        user_email = request.COOKIES.get('email')
+        reportfilepath = "./" + user_email + "/report"
+        if not os.path.exists(reportfilepath):
+            os.makedirs(reportfilepath)
+        with open(reportfilepath + '/' + reportName, 'wb') as file:
+            file.write(buffer.getvalue())
+
+    return FileResponse(buffer, as_attachment=True, filename='report.pdf')
 
 def holt_winters():
     import matplotlib.pyplot as plt
