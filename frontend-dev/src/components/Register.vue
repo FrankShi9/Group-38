@@ -1,19 +1,14 @@
 <template>
+    <div class="main" style="width: 100%;height: calc(100vh)">
     <div class="container-fluid">
-
         <div class="row align-items-center">
             <div class="col-6 offset-3">
                 <!-- website logo -->
-                <div class="avatar-box">
-                    <img src="../assets/logo.png" alt="" >
+                <div class="avatar-box" >
+                    <img src="../assets/logo2.png" alt="" style="height: 150px;width: 200px;align-content: center">
+                    <p style="font-size: 20px; align-content: center;color: white">Unique analysis, one click!</p>
                 </div>
                 <form method="post" action="">
-                    <div class="mb-3 align-self-start">
-                        <label for="userName" class="form-label">Username</label>
-                        <input v-model="registerForm.userName" type="text" class="form-control" id="userName" name="userName" @blur="validUserName" required>
-                        <p id="username-invalid" v-show="invalidName" style="color: red">
-                            Invalid username, it should be in the range of 5-15</p>
-                    </div>
                     <div class="mb-3 align-self-start">
                         <label for="email" class="form-label">Email address</label>
                         <input v-model="registerForm.email" type="email" class="form-control" id="email" name="email" @blur="registeredEmail" required>
@@ -37,6 +32,7 @@
             </div>
         </div>
     </div>
+    </div>
 </template>
 <script>
     import axios from 'axios';
@@ -45,7 +41,6 @@
         data(){
             return {
                 registerForm: {
-                    userName: '',
                     email: '',
                     password: '',
                     confirmPassword: ''
@@ -56,22 +51,20 @@
             }
         },
         methods:{
-            validUserName(){
-                if(this.registerForm.userName.length>15 || this.registerForm.userName.length<5){
-                    this.invalidName=true
-                }else {
-                    this.invalidName=false
-                }
-                this.canSubmit()
-            },
             registeredEmail(){
-                console.log(123)
-                axios.request({
-                    method:"post",
-                    url:'https://jsonplaceholder.typicode.com/users',
-                    data:{
-                        'email': this.registerForm.email
-                    },
+                // axios.request({
+                //     method:"post",
+                //     url:'',
+                //     data:{
+                //         'email': this.registerForm.email
+                //     },
+                // }).then(response => {
+                //
+                // })
+                axios.post( '', this.registerForm.email, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
                 }).then(response => {
                     console.log(123)
                     console.log(response.data)
@@ -117,5 +110,9 @@
   }
   .login-button-box {
     text-align: center;
+  }
+  .main{
+    background: url("../assets/bg.jpg");
+    background-size: 100%;
   }
 </style>

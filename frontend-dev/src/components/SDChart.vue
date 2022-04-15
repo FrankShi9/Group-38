@@ -1,5 +1,6 @@
 <template>
     <div class="mb-3 align-self-start" id="SDChart"></div>
+    <input id="range" type="range" min="" max="" v-model="price"><span> Price : {{price}}; Revenue : {{revenue}}</span>
     <div class="mb-3 align-self-start" id="Statistics"></div>
 </template>
 
@@ -11,16 +12,30 @@
         name: "SDChart",
         data(){
             return{
+                a: 0,
+                b: 0,
+                price: 0,
+                revenue: 0
+            }
+        },
+        watch:{
+            price(){
+                this.revenue=Math.round(Math.exp((Math.log(this.price)-this.b)/this.a)*this.price)
             }
         },
         created() {
-            let url = this.$route.query
+            let url = decodeURIComponent(this.$route.query.arg)
+            let arg=JSON.parse(url)
+
+            this.a=arg.a
+            this.b=arg.b
+
             function func(x) {
-                return Math.exp(parseFloat(url.a)*Math.log(x)+parseFloat(url.b))
+                return Math.exp(parseFloat(arg.a)*Math.log(x)+parseFloat(arg.b))
             }
             function generateData() {
                 let data = [];
-                for (let i = 16; i <= 23; i += 0.1) {
+                for (let i = arg.c; i <= arg.d; i += 0.1) {
                     data.push([i, func(i)]);
                 }
                 return data;
@@ -32,13 +47,11 @@
                     formatter: function (params){
                         let str = Math.round(params[0].data[0]) + "<br />";
                         params.forEach((item) => {
-                            str +=
-                                '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:'+item.color+'"></span>' + 'Revenue' + " : " + Math.round(item.data[0]*item.data[1]) + "<br />";
+                            str += '<span style="display:inline-block;margin-right:5px;border-radius:50%;width:10px;height:10px;left:5px;background-color:'+item.color+'"></span>' + 'Revenue' + " : " + Math.round(item.data[0]*item.data[1]) + "<br />";
                         });
                         return str;
                     },
                     axisPointer: {
-                        //type: 'cross',
                         label: {
                             backgroundColor: '#6a7985'
                         }
@@ -53,8 +66,8 @@
                 },
                 xAxis: {
                     name: 'x',
-                    min: url.c,
-                    max: url.d,
+                    min: arg.c,
+                    max: arg.d,
                     minorTick: {
                         show: true
                     },
@@ -64,8 +77,8 @@
                 },
                 yAxis: {
                     name: 'y',
-                    min: url.e,
-                    max: url.f,
+                    min: arg.e,
+                    max: arg.f,
                     minorTick: {
                         show: true
                     },
@@ -73,24 +86,6 @@
                         show: true
                     }
                 },
-                // dataZoom: [
-                //     {
-                //         show: true,
-                //         //type: 'inside',
-                //         filterMode: 'none',
-                //         xAxisIndex: [0],
-                //         startValue: -20,
-                //         endValue: 20
-                //     },
-                //     {
-                //         show: true,
-                //         //type: 'inside',
-                //         filterMode: 'none',
-                //         yAxisIndex: [0],
-                //         startValue: -20,
-                //         endValue: 20
-                //     }
-                // ],
                 series: [
                     {
                         type: 'line',
@@ -123,13 +118,7 @@
                 dataset: [
                     {
                     // prettier-ignore
-                        source: [
-                            [850, 740, 900, 1070, 930, 850, 950, 980, 980, 880, 1000, 980, 930, 650, 760, 810, 1000, 1000, 960, 960],
-                            [960, 940, 960, 940, 880, 800, 850, 880, 900, 840, 830, 790, 810, 880, 880, 830, 800, 790, 760, 800],
-                            [880, 880, 880, 860, 720, 720, 620, 860, 970, 950, 880, 910, 850, 870, 840, 840, 850, 840, 840, 840],
-                            [890, 810, 810, 820, 800, 770, 760, 740, 750, 760, 910, 920, 890, 860, 880, 720, 840, 850, 850, 780],
-                            [890, 840, 780, 810, 760, 810, 790, 810, 820, 850, 870, 870, 810, 740, 810, 940, 950, 800, 810, 870]
-                        ]
+                        source:generateData()
                     },
                     {
                         transform: {
@@ -189,19 +178,22 @@
                 const chart2=echarts.init(document.getElementById("Statistics"))
                 chart1.setOption(option1)
                 chart2.setOption(option2)
+                $('#range').attr('min',arg.e)
+                $('#range').attr('max',arg.f)
             });
 
         },
-        updated() {
-
-        }
     }
 </script>
 
 <style lang="scss" scoped>
-#main{
+#SDChart{
     width: 1000px;
     height:400px;
     margin: 20px;
+}
+#Statistics{
+    width: 400px;
+    height: 400px;
 }
 </style>

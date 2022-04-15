@@ -42,12 +42,6 @@
             $(document).ready(function(){
                 const chart=echarts.init(document.getElementById("main"))
                 chart.setOption(option)
-                chart.on('click',function (params){
-                    if (params.componentType==='series'){
-                        console.log(params)
-                    }
-                    console.log(params)
-                })
             });
         }
     }

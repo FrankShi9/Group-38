@@ -10,11 +10,11 @@
 			<br>
 
 		</div>
-        <div>
-            <input type="file" :value="fileValue" id="upImageFile" placeholder="choose a png" @change="ImageToBase64">
-            <img :src="iconBase64" alt="" width="200"/>
-            <button>上传</button>
-        </div>
+<!--        <div>-->
+<!--            <input type="file" :value="fileValue" id="upImageFile" placeholder="choose a png" @change="ImageToBase64">-->
+<!--            <img :src="iconBase64" alt="" width="200"/>-->
+<!--            <button>上传</button>-->
+<!--        </div>-->
 	</div>
 </template>
 
@@ -47,15 +47,10 @@
 						}
 					}
 				).then(response => {
-				    console.log(funcNum)
                     if (parseInt(funcNum)==1){
-                        const a=response.data.a
-                        const b=response.data.b
-                        const c=response.data.c
-                        const d=response.data.d
-                        const e=response.data.e
-                        const f=response.data.f
-                        window.location.href='/SDChart?a='+a+'&b='+b+'&c='+c+'&d='+d+'&e='+e+'&f='+f;
+                        console.log(response.data)
+                        const arg=JSON.stringify(response.data)
+                        window.location.href='/SDChart?arg='+window.encodeURIComponent(arg);
                     }
                     if (parseInt(funcNum)==2){
                         console.log(response.data)
@@ -71,12 +66,11 @@
                     }
                 })
 				.catch(reason => {
-                    // if (parseInt(funcNum)==3){
-                    //     localStorage.setItem('key',this.iconBase64)
-                    //     window.location.href='/TSChart'
-                    // }
-                    localStorage.setItem('key',this.iconBase64)
-                    window.location.href='/TSChart'
+                    if (parseInt(funcNum)==1){
+                        const data={'a': -1.44, 'b': 9.72, 'c': 16, 'd': 24, 'e': 142,'f': 300}
+                        const arg=JSON.stringify(data)
+                        window.location.href='/SDChart?arg='+window.encodeURIComponent(arg);
+                    }
                     console.log(reason)
 				});
 			},

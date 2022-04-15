@@ -14,54 +14,26 @@
             </div>
         </div>
     </div>
-    <div id="hiddenDiv" style="display: none; width:400px; height: 400px">
-        <div>
-            <input type="file" class="form-control" @change="handleFileUpload( $event )" accept=".csv" >
-            <button v-on:click="submitFile()">Submit</button>
-        </div>
-    </div>
 
 </template>
 
 <script>
     import axios from "axios";
     import $ from 'jquery';
-
-    const formObj=$("#hiddenDiv")
-    const form=formObj.clone()
-
+    import cookies from 'vue-cookies'
     export default {
         name: "ChooseFunc",
         data(){
             return{
                 file:"",
-                funcNum: 0
+                funcNum: 0,
+                status: false
             }
         },
         methods:{
             onSubmitOne(){
                 this.funcNum=1
                 window.location.href='/uploadfile?funcNum='+this.funcNum
-                // $.confirm({
-                //     title: 'Upload File',
-                //     content: form.html(),
-                //     button:{
-                //         formSubmit:{
-                //             text:'upload',
-                //             btnClass:'btn-blue',
-                //             action:function (){
-                //                 console.log(2)
-                //                 const data={
-                //                     funcNum:this.funcNum
-                //                 }
-                //                 this.submitFile(data)
-                //             }
-                //         },
-                //         cancel:{
-                //             text:'cancel'
-                //         }
-                //     }
-                // })
             },
             onSubmitTwo(){
                 this.funcNum=2
@@ -69,32 +41,29 @@
             },
             onSubmitThree(){
                 this.funcNum=3
-                window.location.href='/uploadfile?funcNum='+this.funcNum
+                if (!this.status){
+                    alert("You need to login, help you redirect to login page")
+                    window.location.href='/login'
+                }else {
+                    window.location.href='/uploadfile?funcNum='+this.funcNum
+                }
             },
             handleFileUpload( event ){
                 // a single file
                 this.file = event.target.files[0];
-            },
+            }
+        },
+        created() {
+            this.status = cookies.get('is_login')
 
-            // submitFile(data){
-            //     let formData = new FormData();
-            //     let postData=[data,formData]
-            //     console.log(postData)
-            //     formData.append('file', this.file);
-            //     // issue a POST request
-            //     axios.post( '',
-            //         postData,
-            //         {
-            //             headers: {
-            //                 'Content-Type': 'multipart/form-data'
-            //             }
-            //         }
-            //     ).then(function(){
-            //         console.log('SUCCESS!');
-            //     }).catch(function(){
-            //             console.log('FAILURE!');
-            //     });
-
+            // if (document.cookie) {
+            //     var cookie = {};
+            //     var line = document.cookie.split("; ");
+            //     cookie[line[0].split("=")[0]] = line[0].split("=")[1];
+            //     cookie[line[1].split("=")[0]] = line[1].split("=")[1];
+            //     console.log(cookie);
+            //     //this.user = "欢迎:" + cookie["username"] + "(id:" + cookie["id"] + ")";
+            // }
         }
     }
 </script>
