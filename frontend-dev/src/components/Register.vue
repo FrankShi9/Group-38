@@ -5,7 +5,8 @@
             <div class="col-6 offset-3">
                 <!-- website logo -->
                 <div class="avatar-box">
-                    <img src="../assets/logo.png" alt="" >
+                    <img src="../assets/logo.png" style="width:400px;height:300px;-webkit-filter: drop-shadow(5px 5px 5px #808080);
+  filter: drop-shadow(5px 5px 5px #808080);" alt="">
                 </div>
                 <form method="post" action="">
                     <div class="mb-3 align-self-start">

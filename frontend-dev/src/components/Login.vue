@@ -5,33 +5,35 @@
                 <form method="post">
                     <!-- website logo -->
                     <div class="avatar-box">
-                        <img src="../assets/logo.png" alt="" >
+                        <img src="../assets/logo.png" style="width:400px;height:300px;-webkit-filter: drop-shadow(5px 5px 5px #808080);
+  filter: drop-shadow(5px 5px 5px #808080);" alt="" >
                     </div>
                     <div class="mb-3 align-self-start">
-                        <label for="email" class="form-label">Email address</label>
+                        <label for="email" class="form-label"><div style="text-align:justify"><b>Email address</b></div></label>
                         <input v-model="loginForm.email" type="email" class="form-control" id="email" name="email" required>
                     </div>
 
                     <div class="mb-3 align-self-start">
-                        <label for="password" class="form-label">Password</label>
+                        <label for="password" class="form-label"><b>Password</b>&nbsp;&nbsp;<a href="../forget"><i>Forgot password?</i></a></label>
                         <input v-model="loginForm.password" type="password" class="form-control" id="password" name="password" required>
                     </div>
                     <div>
-                        <p><a href="../register">Register</a></p>
+                         <a href="../register">Need an account? Sign up</a>
                     </div>
                     <div class="login-button-box">
-                        <button type="button" class="btn btn-primary" @click="show">Skip</button>
+                        <button type="button" class="btn btn-secondary" @click="show">Skip</button>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <button type="submit" class="btn btn-primary">Login</button>
                     </div>
                 </form>
-
             </div>
         </div>
+
+        <div class="home">
+            <model :showModel="this.showModel" @cancel="this.showModel=false"></model>
+        </div>
     </div>
-    <div class="home">
-        <model :showModel="this.showModel" @cancel="this.showModel=false"></model>
-    </div>
+    
 </template>
 
 <script>
