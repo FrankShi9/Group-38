@@ -203,6 +203,10 @@ def demand(request):
     print(min(demand['Quantity']), max(demand['Quantity']))
     print(min(demand['Price']), max(demand['Price']))
 
+    raw = {
+        'q': (demand['Quantity'].to_string(index=False).split('\n')),
+        'p': (demand['Price'].to_string(index=False).split('\n')),
+    }
     # return redirect('/SDChart?a='+str(param[0])+'&b='+str(param[1])+'&c='+str(min(demand['Quantity']))+'&d='+str(max(demand['Quantity']))+'&e='+str(min(demand['Price']))+'&f='+str(max(demand['Price'])))
     data = {'a': (param[0]),
             'b': (param[1]),
@@ -210,6 +214,7 @@ def demand(request):
             'd': (max(demand['Quantity'])),
             'e': (min(demand['Price'])),
             'f': (max(demand['Price'])),
+            'g': raw
             }
     # return JsonResponse(data)
     # return HttpResponse(data)
@@ -363,7 +368,7 @@ def rfm(request):
         'MonetaryValue (M)': ['mean', 'count']
     }).round(1)
 
-    print(rfm_level_agg)
+    #print(rfm_level_agg)
     # print('------------------------------------------------------')
 
     rfm_level_agg.columns = rfm_level_agg.columns.droplevel()
@@ -389,6 +394,14 @@ def rfm(request):
     ## plot lim does not need
     ## return Json to WC
     #data = dict(rfm_level_agg['Count'])
+
+    #print(rfm_data)
+    raw = {
+        'r': list(i.replace('CustomerID', '') for i in rfm_data['Recency (R)'].to_string(index=False).split('\n')),
+        'f': list(i.replace('CustomerID', '') for i in rfm_data['Frequency (F)'].to_string(index=False).split('\n')),
+        'm': list(i.replace('CustomerID', '') for i in rfm_data['MonetaryValue (M)'].to_string(index=False).split('\n'))
+    }
+    print(raw)
     data = {
         'Activate them': int(rfm_level_agg['Count'][0]),
         'Champions': int(rfm_level_agg['Count'][1]),
@@ -396,7 +409,8 @@ def rfm(request):
         'Loyal': int(rfm_level_agg['Count'][3]),
         'Pay attention': int(rfm_level_agg['Count'][4]),
         'Potential': int(rfm_level_agg['Count'][5]),
-        'Promising': int(rfm_level_agg['Count'][6])
+        'Promising': int(rfm_level_agg['Count'][6]),
+        'r': raw
     }
     return HttpResponse(json.dumps(data))
 
@@ -408,6 +422,7 @@ def xts(request):
     from sklearn.preprocessing import MinMaxScaler
 
     status = request.COOKIES.get('is_login')
+
 
     print("xts already login")
     user_email = request.COOKIES.get("email")
@@ -434,12 +449,15 @@ def xts(request):
     X_test = []
     Y_test = []
 
+    #print(inputs.shape[0])
+
     for i in range(60, inputs.shape[0]):
         X_test.append(inputs[i - 60:i])
         Y_test.append(inputs[i, 0])
 
     X_test, Y_test = np.array(X_test), np.array(Y_test)
     Y_pred = model.predict(X_test)
+    #print(type(Y_pred))
 
     scale = 1 / 5.18164146e-05
     Y_test = Y_test * scale
@@ -452,19 +470,31 @@ def xts(request):
     plt.xlabel('Time')
     plt.ylabel('Price')
     plt.legend()
-    plt.savefig('foo.png')
+    #plt.savefig('foo.png')
 
+    ''' test current dir '''
     # import os
     # dirspot = os.getcwd()
     # print(dirspot)
 
-    import base64
-    with open('foo.png', "rb") as image_file:
-        image_data = base64.b64encode(image_file.read()).decode('utf-8')
-    #print(image_data)
-    #return HttpResponse('success')
-    return HttpResponse(image_data)
-    #return HttpResponse(json.dumps(image_data))
+    ''' image response '''
+    # import base64
+    # with open('foo.png', "rb") as image_file:
+    #     image_data = base64.b64encode(image_file.read()).decode('utf-8')
+    # return HttpResponse(image_data)
+
+    ''' enchart integrate '''
+    #x_test = list(round(i,2) for i in X_test.reshape(-1).tolist())
+    y_test = list(round(i,2) for i in Y_test.reshape(-1).tolist())
+    y_pred = list(round(i,2) for i in Y_pred.reshape(-1).tolist())
+
+    data = {
+        'y1': y_test,
+        'y2': y_pred,
+    }
+    #print('1:', data.get('x1'))
+    #print('2', data.get('y2'))
+    return HttpResponse(json.dumps(data))
 
 
 # All pdf down button redirect to this one
