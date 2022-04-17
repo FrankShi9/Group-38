@@ -37,7 +37,7 @@ def login(request):
 
         user_obj = models.UserInfo.objects.filter(email=email, password=password).first()
         if user_obj is not None:
-            response = redirect('/chooseFunc')
+            response = redirect('/chooseFunc/')
             response.set_cookie("is_login", True, max_age=60 * 60 * 24)
             response.set_cookie("email", email, max_age=60 * 60 * 24)
             return response
@@ -72,7 +72,7 @@ def register(request):
             # logger.info(email)
             # logger.info(password)
 
-            return redirect('/login')
+            return redirect('/login/')
 
 
 def forget(request):
@@ -125,6 +125,9 @@ def uploadfile(request):
         return render(request, "index.html")
 
     if request.method == "POST":
+        funcNum = str(1)
+        user_email = 'tempUser'
+        response = redirect('/404')
         if funcNum == str(1):
             response = redirect('/demand')
         elif funcNum == str(2):
@@ -190,7 +193,9 @@ def history(request):
 def demand(request):
     import pandas as pd
     import numpy as np
-    user_email = request.COOKIES.get("email")
+    user_email = 'tempUser'
+    if request.COOKIES.get('is_login') == 'True':
+        user_email = request.COOKIES.get("email")
     demand = pd.read_csv(user_email + '/upload/demand.csv')
     # print(demand.head(10))
 
@@ -242,7 +247,9 @@ def rfm(request):
     import squarify
 
     # Load Dataset
-    user_email = request.COOKIES.get("email")
+    user_email = 'tempUser'
+    if request.COOKIES.get('is_login') == 'True':
+        user_email = request.COOKIES.get("email")
     data = pd.read_csv(user_email + '/upload/rfm.csv', encoding='ISO-8859-1')
 
     pd.set_option('display.max_columns', None)
@@ -417,7 +424,9 @@ def xts(request):
     import pandas as pd
     from sklearn.preprocessing import MinMaxScaler
 
-    user_email = request.COOKIES.get("email")
+    user_email = 'tempUser'
+    if request.COOKIES.get('is_login') == 'True':
+        user_email = request.COOKIES.get("email")
     data = pd.read_csv(user_email + '/upload/BTC-USD.csv', date_parser=True)
     data_training = data[data['Date'] < '2020-01-01'].copy()
     data_test = data[data['Date'] < '2020-01-01'].copy()
@@ -503,7 +512,8 @@ def pdf_down(request):
 
     return FileResponse(buffer, as_attachment=True, filename='report.pdf')
 
-def holt_winters():
+
+def holt_winters(request):
     import matplotlib.pyplot as plt
     import seaborn as sns
     from datetime import datetime
@@ -512,14 +522,18 @@ def holt_winters():
     from statsmodels.tsa.holtwinters import SimpleExpSmoothing
     from statsmodels.tsa.holtwinters import ExponentialSmoothing
 
-    data = pd.read_csv("gold_price_data.csv")
+    user_email = 'tempUser'
+    if request.COOKIES.get('is_login') == 'True':
+        user_email = request.COOKIES.get("email")
+    data = pd.read_csv(user_email + "/upload/gold_price_data.csv")
     data['Date'] = pd.to_datetime(data['Date'], format='%Y-%m-%d')
     rNum = data.shape[0]
-    trainNum = int(rNum * 0.9)
-    predictNum = rNum - trainNum
+    trainNum = rNum
+    #set by users
+    predictNum = int(rNum*0.1)
 
     train_hw = data["Value"][:trainNum]
-    test_hw = data["Value"][trainNum:]
+    #test_hw = data["Value"][trainNum:]d
 
     future = ExponentialSmoothing(train_hw, trend='mul').fit()
 
@@ -527,6 +541,6 @@ def holt_winters():
 
     plt.figure(figsize=(16, 4))
     plt.plot(train_hw, label='Train')
-    plt.plot(test_hw, label='Test')
+    #plt.plot(test_hw, label='Test')
     plt.plot(forecast_hw, label='Forecast')
     plt.legend(loc='best')
