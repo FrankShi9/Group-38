@@ -1,0 +1,71 @@
+<template>
+    <div class="tooltip" v-show="true" style="text-align: center;width: 100px;height: 50px">{{user}}</div>
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col-6 offset-3">
+                <div class="mb-3 align-self-start">
+                    <button type="submit" class="showUser form-control" @click="funcOne">Show all users</button>
+                </div>
+                <div class="mb-3 align-self-start">
+                    <button type="submit" class="updateModel form-control" @click="funcTwo">Update models</button>
+                </div>
+                <div class="mb-3 align-self-start">
+                    <ul v-show="this.show">
+                        <li v-for="(email, password) in userAll">Email: {{email}},Password:{{password}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="home">
+        <model :showModelFour="this.showModelFour" @cancel="this.showModelFour=false"></model>
+    </div>
+</template>
+
+<script>
+    import cookies from 'vue-cookies'
+    import axios from "axios";
+    import Model from '../components/Model'
+    export default {
+        name: "Admin",
+        components:{Model},
+        data(){
+            return{
+                user:'',
+                userAll:[],
+                show:false,
+                showModelFour:false
+            }
+        },
+        created() {
+            if(cookies.get("admin")!=null){
+                console.log(cookies.get('admin'))
+                this.user = "Welcome! Admin!";
+            }
+        },
+        methods:{
+            funcOne(){
+                axios({
+                    method:'post',
+                    url:''
+                }).then((response) => {
+                    this.show=true
+                    console.log(response.data)
+                    const arg=response.data
+                    for (var i=0;i<arg.email.length;i++){
+                        this.userAll.push([arg.email[i], arg.password[i]])
+                    }
+                    console.log(this.userAll)
+                })
+                cookies.set("funcNum",1)
+            },
+            funcTwo(){
+                this.showModelFour=true
+            }
+        }
+    }
+</script>
+
+<style scoped>
+
+</style>

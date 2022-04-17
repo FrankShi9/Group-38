@@ -14,20 +14,26 @@
             </div>
         </div>
     </div>
+    <div class="home">
+        <model :showModelThree="this.showModelThree" @cancel="this.showModelThree=false"></model>
+    </div>
 
 </template>
 
 <script>
     import axios from "axios";
     import $ from 'jquery';
+    import Model from '../components/Model'
     import cookies from 'vue-cookies'
     export default {
         name: "ChooseFunc",
+        components:{Model},
         data(){
             return{
                 file:"",
                 funcNum: 0,
-                status: false
+                status: false,
+                showModelThree: false
             }
         },
         methods:{
@@ -45,7 +51,7 @@
                     alert("You need to login, help you redirect to login page")
                     window.location.href='/login'
                 }else {
-                    window.location.href='/uploadfile?funcNum='+this.funcNum
+                    this.showModelThree=true
                 }
             },
             handleFileUpload( event ){
@@ -69,5 +75,8 @@
 </script>
 
 <style scoped>
-
+    .home {
+        width: 100%;
+        height: 1000px;
+    }
 </style>

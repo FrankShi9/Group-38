@@ -1,7 +1,18 @@
 <template>
+    <input id="range" type="range" min="" max="" v-model="price">
     <div class="mb-3 align-self-start" id="SDChart"></div>
-    <input id="range" type="range" min="" max="" v-model="price"><span> Price : {{price}}; Revenue : {{revenue}}</span>
-    <div class="mb-3 align-self-start" id="Statistics"></div>
+    <div id="rangeBox">
+        <span> You can pull the slide block to see your profit:</span><br>
+        <span> Price : £ {{price}} </span><br>
+        <span> Revenue : £ {{revenue}} </span>
+    </div>
+    <div id="buttons">
+        <button id="downloadImg" style="margin: 5px">Download Charts</button><br>
+        <button id="downloadResults" style="margin: 5px">Download Results</button><br>
+        <button id="return" style="margin: 5px" @click="returnBack">Return back to main menu</button>
+    </div>
+    <div class="mb-3 align-self-start" id="Statistics1"></div>
+    <div class="mb-3 align-self-start" id="Statistics2"></div>
 </template>
 
 <script>
@@ -21,14 +32,63 @@
         watch:{
             price(){
                 this.revenue=Math.round(Math.exp((Math.log(this.price)-this.b)/this.a)*this.price)
+            },
+        },
+        methods:{
+            // 预览：因为使用window.print火狐无法预览，因此采用新打开一个窗口的方式用来展示被打印的内容
+            // 打印指定区域内容：通过只将需打印的内容添加到新窗口中，实现打印指定区域
+            doViewAndPrint(canvasUrl) {
+                const domPrint = document.createElement('img');
+                domPrint.src = canvasUrl;
+                console.log(canvasUrl)
+                console.log(123)
+                let page = window.open('', '_blank'); // 打开一个新窗口，用于打印
+                page.document.body.appendChild(domPrint);
+
+                domPrint.onload = function () {
+                    page.print(); // 打印
+                    page.close(); // 关闭打印窗口
+                };
+            },
+            doPrintByFrame(canvasUrl) {
+                //判断iframe是否存在，不存在则创建iframe
+                var iframe = document.getElementById("print-iframe");
+                const domPrint = document.createElement('img');
+                domPrint.src = canvasUrl;
+                if (!iframe) {
+                    iframe = document.createElement('IFRAME');
+                    var doc = null;
+                    iframe.setAttribute("id", "print-iframe");
+                    iframe.setAttribute('style', 'position:absolute;width:0px;height:0px;left:-500px;top:-500px;');
+                    document.body.appendChild(iframe);
+                    doc = iframe.contentWindow.document;
+                    //这里可以自定义样式
+                    //doc.write("<LINK rel="stylesheet" type="text/css" href="css/print.css">");
+                    doc.body.appendChild(domPrint);
+                    doc.close();
+                    iframe.contentWindow.focus();
+                }
+                domPrint.onload = function () {
+                    iframe.contentWindow.print(); // 打印
+                    document.body.removeChild(iframe);
+                };
+            },
+            returnBack(){
+                window.location.href="/chooseFunc"
             }
         },
         created() {
-            let url = decodeURIComponent(this.$route.query.arg)
-            let arg=JSON.parse(url)
+            let arg=JSON.parse(localStorage.getItem('key'))
+            localStorage.clear()
 
             this.a=arg.a
             this.b=arg.b
+            const p=[]
+            const q=[]
+            for (var i=0;i<arg.g.p.length;i++){
+                p.push(parseFloat(arg.g.p[i]))
+                q.push(parseFloat(arg.g.q[i]))
+            }
 
             function func(x) {
                 return Math.exp(parseFloat(arg.a)*Math.log(x)+parseFloat(arg.b))
@@ -57,6 +117,17 @@
                         }
                     },
                 },
+                toolbox: {
+                    show: true,
+                    right: '20px',
+                    feature: {
+                        // 下载保存为图片
+                        saveAsImage: {
+                            show: true,
+                            title: 'Download image'
+                        }
+                    }
+                },
                 animation: false,
                 grid: {
                     top: 40,
@@ -65,7 +136,7 @@
                     bottom: 50
                 },
                 xAxis: {
-                    name: 'x',
+                    name: 'Demand',
                     min: arg.c,
                     max: arg.d,
                     minorTick: {
@@ -76,7 +147,7 @@
                     }
                 },
                 yAxis: {
-                    name: 'y',
+                    name: 'Price',
                     min: arg.e,
                     max: arg.f,
                     minorTick: {
@@ -98,10 +169,7 @@
             };
             const option2 = {
                 title: [
-                    {
-                        text: 'Michelson-Morley Experiment',
-                        left: 'center'
-                    },
+                    {text: 'Statistics data', left: 'center'},
                     {
                         text: 'upper: Q3 + 1.5 * IQR \nlower: Q1 - 1.5 * IQR',
                         borderColor: '#999',
@@ -116,49 +184,30 @@
                     }
                 ],
                 dataset: [
-                    {
-                    // prettier-ignore
-                        source:generateData()
-                    },
-                    {
-                        transform: {
-                            type: 'boxplot',
-                            config: { itemNameFormatter: 'expr {value}' }
-                        }
-                    },
-                    {
-                        fromDatasetIndex: 1,
-                        fromTransformResult: 1
-                    }
-                ],
-                tooltip: {
-                    trigger: 'item',
-                        axisPointer: {
-                        type: 'shadow'
-                    }
-                },
-                grid: {
-                    left: '10%',
-                    right: '10%',
-                    bottom: '15%'
-                },
-                xAxis: {
-                    type: 'category',
-                        boundaryGap: true,
-                        nameGap: 30,
-                        splitArea: {
-                        show: false
-                    },
-                    splitLine: {
-                        show: false
-                    }
-                },
-                yAxis: {
-                    type: 'value',
-                        name: 'km/s minus 299,000',
+                    {source: [p]},
+                    {transform: {type: 'boxplot', config: { itemNameFormatter: 'expr {value}' }}},
+                    {fromDatasetIndex: 1, fromTransformResult: 1}],
+                    tooltip: {trigger: 'item', axisPointer: {type: 'shadow'}},
+                    grid: {left: '10%', right: '10%', bottom: '15%'},
+                    xAxis: {type: 'category',
+                            boundaryGap: true,
+                            nameGap: 30,
+                            splitArea: {
+                            show: false},
+                            splitLine: {show: false}},
+                    yAxis: {
+                        type: 'value',
                         splitArea: {
                         show: true
-                    }
+                    },
+                    dataZoom:[{
+                        show: true,
+                        start: 0,
+                        end: 20
+                    },{
+                        start:0,
+                        end:20
+                    }]
                 },
                 series: [
                     {
@@ -173,13 +222,84 @@
                     }
                 ]
             };
+            const option3 = {
+                title: [
+                    {text: 'Statistics data', left: 'center'},
+                    {
+                        text: 'upper: Q3 + 1.5 * IQR \nlower: Q1 - 1.5 * IQR',
+                        borderColor: '#999',
+                        borderWidth: 1,
+                        textStyle: {
+                            fontWeight: 'normal',
+                            fontSize: 14,
+                            lineHeight: 20
+                        },
+                        left: '10%',
+                        top: '90%'
+                    }
+                ],
+                dataset: [
+                    {source: [q]},
+                    {transform: {type: 'boxplot', config: { itemNameFormatter: 'expr {value}' }}},
+                    {fromDatasetIndex: 1, fromTransformResult: 1}],
+                tooltip: {trigger: 'item', axisPointer: {type: 'shadow'}},
+                grid: {left: '10%', right: '10%', bottom: '15%'},
+                xAxis: {type: 'category',
+                    boundaryGap: true,
+                    nameGap: 30,
+                    splitArea: {
+                        show: false},
+                    splitLine: {show: false}},
+                yAxis: {
+                    type: 'value',
+                    splitArea: {
+                        show: true
+                    },
+                },
+                series: [
+                    {
+                        name: 'boxplot',
+                        type: 'boxplot',
+                        datasetIndex: 1
+                    },
+                    {
+                        name: 'outlier',
+                        type: 'scatter',
+                        datasetIndex: 2
+                    }
+                ]
+            }
             $(document).ready(function(){
                 const chart1=echarts.init(document.getElementById("SDChart"))
-                const chart2=echarts.init(document.getElementById("Statistics"))
+                const chart2=echarts.init(document.getElementById("Statistics1"))
+                const chart3=echarts.init(document.getElementById("Statistics2"))
                 chart1.setOption(option1)
                 chart2.setOption(option2)
+                chart3.setOption(option3)
                 $('#range').attr('min',arg.e)
                 $('#range').attr('max',arg.f)
+
+                const canvas=document.querySelector("#SDChart canvas")
+                const dataUrl = canvas.toDataURL();
+                $('#downloadImg').on("click",function (){
+                    doViewAndPrint(dataUrl)
+                })
+
+                // 预览：因为使用window.print火狐无法预览，因此采用新打开一个窗口的方式用来展示被打印的内容
+                // 打印指定区域内容：通过只将需打印的内容添加到新窗口中，实现打印指定区域
+                function doViewAndPrint(canvasUrl) {
+                    const domPrint = document.createElement('img');
+                    domPrint.src = canvasUrl;
+                    console.log(canvasUrl)
+                    console.log(123)
+                    let page = window.open('', '_blank'); // 打开一个新窗口，用于打印
+                    page.document.body.appendChild(domPrint);
+
+                    domPrint.onload = function () {
+                        page.print(); // 打印
+                        page.close(); // 关闭打印窗口
+                    };
+                }
             });
 
         },
@@ -188,12 +308,43 @@
 
 <style lang="scss" scoped>
 #SDChart{
+    float: left;
     width: 1000px;
     height:400px;
-    margin: 20px;
+    margin-top: 20px;
 }
-#Statistics{
-    width: 400px;
-    height: 400px;
+#Statistics1{
+    float: left;
+    width: 300px;
+    height: 300px;
+}
+#Statistics2{
+    float: left;
+    width: 300px;
+    height: 300px;
+}
+#buttons{
+    float: left;
+    width: 350px;
+    height: 200px;
+    margin: 20px;
+    margin-top: 100px;
+    margin-left: 50px;
+}
+#rangeBox{
+    float: left;
+    width: 350px;
+    height: 50px;
+    margin: 20px;
+    margin-top: 100px;
+    margin-left: 50px;
+}
+input[type=range]{
+    float: left;
+    width: 16px;
+    height: 350px;
+    margin: 20px;
+    margin-top: 40px;
+    -webkit-appearance: slider-vertical;
 }
 </style>

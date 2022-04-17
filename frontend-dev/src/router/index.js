@@ -9,6 +9,9 @@ import RFMChart from "@/components/RFMChart";
 import TSChart from "@/components/TSChart";
 import Waiting from "@/components/Waiting";
 import Model from "@/components/Model";
+import Admin from "@/components/Admin";
+import AboutUs from "@/components/AboutUs";
+import Guidance from "@/components/Guidance";
 
 const routes = [
   {
@@ -52,6 +55,18 @@ const routes = [
   },
   {
     component: Model
+  },
+  {
+    path:'/Admin',
+    component: Admin
+  },
+  {
+    path: '/AboutUs',
+    component: AboutUs
+  },
+  {
+    path: '/Guidance',
+    component: Guidance
   }
 
 ]

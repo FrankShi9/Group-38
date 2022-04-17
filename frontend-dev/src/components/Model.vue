@@ -13,15 +13,82 @@
             </div>
         </div>
     </div>
+    <div class="model" v-show="this.showModelTwo">
+        <div class="model-dialog">
+            <div class="model-header">
+                <span>Attention</span>
+            </div>
+            <div class="model-body">
+                <div class="body" style="font-size: 20px;">Your file is being processed,please wait...</div>
+            </div>
+        </div>
+    </div>
+    <div class="model" v-show="this.showModelThree">
+        <div class="model-dialog">
+            <div class="model-body">
+                <div class="body" style="font-size: 20px;">Please choose your preference model</div>
+            </div>
+            <div class="model-footer">
+                <button class="btn" @click="modelOne">AI: LSTM</button>
+                <button class="btn" @click="modelTwo">Statistical Model</button>
+                <button class="btn" @click="$emit('cancel')">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div class="model" v-show="this.showModelFour">
+        <div class="model-dialog">
+            <div class="model-body">
+                <div class="body" style="font-size: 20px;">Please choose updated model</div>
+                <input type="file" @change="handleFileUpload( $event )" placeholder="choose a file">
+                <div>{{responseData}}</div>
+            </div>
+            <div class="model-footer">
+                <button class="btn" @click="submitFile">Submit</button>
+                <button class="btn" @click="$emit('cancel')">Cancel</button>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
+    import axios from "axios";
+    import cookies from "vue-cookies";
     export default {
         name: "model",
-        props:{showModel : Boolean},
+        props:{showModel : Boolean, showModelTwo : Boolean, showModelThree: Boolean, showModelFour: Boolean},
+        data(){
+            return{
+                responseData:''
+            }
+        },
         methods:{
             skip(){
                 window.location.href="/chooseFunc"
+            },
+            modelOne(){
+                window.location.href="/uploadfile?funcNum=3.1"
+            },
+            modelTwo(){
+                window.location.href="/uploadfile?funcNum=3.2"
+            },
+            handleFileUpload( event ){
+                // a single file
+                this.file = event.target.files[0];
+            },
+            submitFile(){
+                let formData = new FormData();
+                cookies.set("funcNum",2)
+                //let funcNum = this.$route.query.funcNum
+                formData.append('file', this.file);
+                // issue a POST request
+                axios.post( '', formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }
+                ).then((response) => {
+                    this.responseData=response.data
+                })
             }
         }
     }

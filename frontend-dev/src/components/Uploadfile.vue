@@ -8,25 +8,23 @@
                 <button v-on:click="submitFile()">Submit</button>
 			</label>
 			<br>
-
 		</div>
-<!--        <div>-->
-<!--            <input type="file" :value="fileValue" id="upImageFile" placeholder="choose a png" @change="ImageToBase64">-->
-<!--            <img :src="iconBase64" alt="" width="200"/>-->
-<!--            <button>上传</button>-->
-<!--        </div>-->
 	</div>
+    <div class="home">
+        <model :showModelTwo="this.showModelTwo"></model>
+    </div>
 </template>
 
 <script>
 	import axios from 'axios';
-	
+	import Model from '../components/Model'
 	export default {
+	    components:{Model},
 		data(){
 			return {
 				file: '',
                 fileValue: "",
-                iconBase64: ""
+                showModelTwo: false
 			}
 		},
 		
@@ -38,7 +36,7 @@
 			submitFile(){
 				let formData = new FormData();
 				let funcNum = this.$route.query.funcNum
-
+                this.showModelTwo=true
 				formData.append('file', this.file);
 				// issue a POST request
 				axios.post( '', formData, {
@@ -50,30 +48,53 @@
                     if (parseInt(funcNum)==1){
                         console.log(response.data)
                         const arg=JSON.stringify(response.data)
-                        window.location.href='/SDChart?arg='+window.encodeURIComponent(arg);
+                        console.log(arg)
+                        localStorage.setItem('key',arg)
+                        //window.location.href='/SDChart?arg='+window.encodeURIComponent(arg);
+                        window.location.href='/SDChart'
                     }
                     if (parseInt(funcNum)==2){
                         console.log(response.data)
                         const arg=JSON.stringify(response.data)
-                        window.location.href='/RFMChart?arg='+window.encodeURIComponent(arg)
+                        console.log(arg)
+                        localStorage.setItem('key',arg)
+                        //window.location.href='/RFMChart?arg='+window.encodeURIComponent(arg)
+                        window.location.href='/RFMChart'
                     }
-                    if (parseInt(funcNum)==3){
+                    if (parseFloat(funcNum)==3.1){
                         console.log(response.data)
+                        //this.iconBase64=response.data
                         //localStorage.setItem('key',this.iconBase64)
-                        this.iconBase64=response.data
-                        localStorage.setItem('key',this.iconBase64)
+                        const arg=JSON.stringify(response.data)
+                        console.log(arg)
+                        localStorage.setItem('key',arg)
                         window.location.href='/TSChart'
                     }
                 })
 				.catch(reason => {
-                    if (parseInt(funcNum)==1){
-                        const data={'a': -1.44, 'b': 9.72, 'c': 16, 'd': 24, 'e': 142,'f': 300}
-                        const arg=JSON.stringify(data)
-                        window.location.href='/SDChart?arg='+window.encodeURIComponent(arg);
-                    }
-                    console.log(reason)
+                    // if (parseInt(funcNum)==1){
+                    //     const data={'a': -1.44, 'b': 9.72, 'c': 16, 'd': 24, 'e': 142,'f': 300,'g':{'p':100,'q':200}}
+                    //     const arg=JSON.stringify(data)
+                    //     localStorage.setItem("key",arg)
+                    //     //window.location.href='/SDChart?arg='+window.encodeURIComponent(arg);
+                    //     window.location.href='/SDChart'
+                    // }else if (parseInt(funcNum)==2){
+                    //     const data={'a': 144, 'b': 972, 'c': 160, 'd': 240, 'e': 142,'f': 300,'g':400,'r':{'r':100,'f':100,'m':100}}
+                    //     const arg=JSON.stringify(data)
+                    //     localStorage.setItem('key',arg)
+                    //     window.location.href='/RFMChart'}
+                    // // }else if (parseInt(funcNum)==3){
+                    // //     window.location.href='/TSChart'
+                    // // }
+                    // console.log(reason)
 				});
 			},
 		}
 	}
 </script>
+<style>
+    .home {
+        width: 100%;
+        height: 1000px;
+    }
+</style>
