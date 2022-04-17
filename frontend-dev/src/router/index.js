@@ -16,6 +16,7 @@ import Guidance from "@/components/Guidance";
 const routes = [
   {
     path: '/',
+    
   },
   {
     path: '/login', 

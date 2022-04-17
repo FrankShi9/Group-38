@@ -1,39 +1,38 @@
 <template>
-    <div class="main" style="height: calc(100vh);width: 100%">
     <div class="container-fluid">
         <div class="row align-items-center">
             <div class="col-6 offset-3">
                 <form method="post">
                     <!-- website logo -->
-                    <div class="avatar-box" >
-                        <img src="../assets/logo2.png" alt="" style="height: 100px;width: 200px;align-content: center">
-                        <p style="font-size: 20px; align-content: center;color: white">Unique analysis, one click!</p>
+                    <div class="avatar-box">
+                        <img src="../assets/logo.png" style="width:400px;height:300px;-webkit-filter: drop-shadow(5px 5px 5px #808080);
+  filter: drop-shadow(5px 5px 5px #808080);" alt="" >
                     </div>
                     <div class="mb-3 align-self-start">
-                        <label for="email" class="form-label" >Email address</label>
+                        <label for="email" class="form-label"><div style="text-align:justify">Email address</div></label>
                         <input v-model="loginForm.email" type="email" class="form-control" id="email" name="email" required>
                     </div>
 
                     <div class="mb-3 align-self-start">
-                        <label for="password" class="form-label">Password</label>
+                        <label for="password" class="form-label">Password&nbsp;&nbsp;<router-link to="/forget"><i>Forgot password?</i></router-link></label>
                         <input v-model="loginForm.password" type="password" class="form-control" id="password" name="password" required>
                     </div>
-                    <div >
-                        <p><a href="../register" style="color: white">Register</a></p>
+                    <div>
+                        <router-link to="/register">Need an account? Sign up</router-link>
+                         <!-- <a :href="'../register'">Need an account? Sign up</a> -->
                     </div>
+                    <br>
                     <div class="login-button-box">
-                        <button type="button" class="btn btn-primary" @click="show">Skip</button>
+                        <button type="button" class="btn btn-secondary" @click="show">Skip</button>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <button type="submit" class="btn btn-primary">Login</button>
                     </div>
                 </form>
-
             </div>
         </div>
-    </div>
-    </div>
-    <div class="home">
-        <model :showModel="this.showModel" @cancel="this.showModel=false"></model>
+        <div class="home">
+            <model :showModel="this.showModel" @cancel="this.showModel=false"></model>
+        </div>
     </div>
 </template>
 
@@ -69,13 +68,6 @@
 }
 .home {
    width: 100%;
-   height: 1000px;
-}
-.main{
-  background: url("../assets/bg.jpg");
-  background-size: 100%;
-}
-.form-label{
-  color: white;
+   height: auto;
 }
 </style>

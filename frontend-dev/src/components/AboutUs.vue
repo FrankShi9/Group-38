@@ -1,5 +1,5 @@
 <template>
-    <img id="Logo" src="../assets/logo2.png">
+    <img id="Logo" src="../assets/logo.png">
     <div id="Title">About Us</div>
     <div id="Content"></div>
 </template>
@@ -19,7 +19,6 @@
     #Content{
         width: 800px;
         height: 800px;
-        alignment: center;
     }
     #Logo{
         text-align: center;

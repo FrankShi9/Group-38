@@ -1,14 +1,20 @@
 <template>
-    <div class="main" style="width: 100%;height: calc(100vh)">
     <div class="container-fluid">
+
         <div class="row align-items-center">
             <div class="col-6 offset-3">
                 <!-- website logo -->
-                <div class="avatar-box" >
-                    <img src="../assets/logo2.png" alt="" style="height: 150px;width: 200px;align-content: center">
-                    <p style="font-size: 20px; align-content: center;color: white">Unique analysis, one click!</p>
+                <div class="avatar-box">
+                    <img src="../assets/logo.png" style="width:400px;height:300px;-webkit-filter: drop-shadow(5px 5px 5px #808080);
+  filter: drop-shadow(5px 5px 5px #808080);" alt="">
                 </div>
                 <form method="post" action="">
+                    <div class="mb-3 align-self-start">
+                        <label for="userName" class="form-label">Username</label>
+                        <input v-model="registerForm.userName" type="text" class="form-control" id="userName" name="userName" @blur="validUserName" required>
+                        <p id="username-invalid" v-show="invalidName" style="color: red">
+                            Invalid username, it should be in the range of 5-15</p>
+                    </div>
                     <div class="mb-3 align-self-start">
                         <label for="email" class="form-label">Email address</label>
                         <input v-model="registerForm.email" type="email" class="form-control" id="email" name="email" @blur="registeredEmail" required>
@@ -31,7 +37,6 @@
                 </form>
             </div>
         </div>
-    </div>
     </div>
 </template>
 <script>
@@ -110,9 +115,5 @@
   }
   .login-button-box {
     text-align: center;
-  }
-  .main{
-    background: url("../assets/bg.jpg");
-    background-size: 100%;
   }
 </style>
