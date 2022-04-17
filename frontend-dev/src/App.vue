@@ -41,7 +41,7 @@ export default {
           hiddenOnCollapse: true
         },
         {
-          href: '/',
+          href: '/home',
           title: 'Home',
           icon: 'fa fa-home'
         },

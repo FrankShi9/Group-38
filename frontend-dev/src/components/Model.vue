@@ -63,7 +63,7 @@
         },
         methods:{
             skip(){
-                window.location.href="/chooseFunc"
+                window.location.href="/home"
             },
             modelOne(){
                 window.location.href="/uploadfile?funcNum=3.1"

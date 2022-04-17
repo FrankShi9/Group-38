@@ -14,11 +14,11 @@
                     </div>
 
                     <div class="mb-3 align-self-start">
-                        <label for="password" class="form-label">Password&nbsp;&nbsp;<router-link to="/forget"><i>Forgot password?</i></router-link></label>
+                        <label for="password" class="form-label">Password&nbsp;&nbsp;<router-link to="/forget/"><i>Forgot password?</i></router-link></label>
                         <input v-model="loginForm.password" type="password" class="form-control" id="password" name="password" required>
                     </div>
                     <div>
-                        <router-link to="/register">Need an account? Sign up</router-link>
+                        <router-link to="/register/">Need an account? Sign up</router-link>
                          <!-- <a :href="'../register'">Need an account? Sign up</a> -->
                     </div>
                     <br>

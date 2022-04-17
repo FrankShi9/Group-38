@@ -12,11 +12,16 @@ import Model from "@/components/Model";
 import Admin from "@/components/Admin";
 import AboutUs from "@/components/AboutUs";
 import Guidance from "@/components/Guidance";
+import History from '@/components/History';
 
 const routes = [
   {
-    path: '/',
-    
+    path: '',
+    redirect: '/home'
+  },
+  {
+    path: '/home',
+    component: ChooseFunc
   },
   {
     path: '/login', 
@@ -37,10 +42,6 @@ const routes = [
   {
     path: '/uploadfile',
     component: Uploadfile
-  },
-  {
-    path: '/chooseFunc',
-    component: ChooseFunc
   },
   {
     path: '/RFMChart',
@@ -66,8 +67,16 @@ const routes = [
     component: AboutUs
   },
   {
-    path: '/Guidance',
+    path: '/guidance',
     component: Guidance
+  },
+  {
+    path: '/history',
+    component: History
+  },
+  {
+    path: '/logout',
+    redirect: '/home'
   }
 
 ]
