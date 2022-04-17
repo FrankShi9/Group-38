@@ -125,15 +125,16 @@ def uploadfile(request):
         return render(request, "index.html")
 
     if request.method == "POST":
-        funcNum = str(1)
         user_email = 'tempUser'
         response = redirect('/404')
         if funcNum == str(1):
             response = redirect('/demand')
         elif funcNum == str(2):
             response = redirect('/rfm')
-        elif funcNum == str(3):
+        elif funcNum == str(3.1):
             response = redirect('/xts')
+        elif funcNum == str(3.2):
+            response = redirect('/holt_winters')
         file = request.FILES.get('file')
         # print(request.POST.get('funcNum'))
         # file = request.POST.get('file')
@@ -155,7 +156,7 @@ def uploadfile(request):
             userlog_obj.save()
             response.set_cookie("filename", file.name, max_age=60 * 60 * 24)
 
-        elif funcNum == str(3):
+        elif funcNum == str(3.1) or funcNum == str(3.2):
             print("need login")
             return HttpResponse("login required")
 
