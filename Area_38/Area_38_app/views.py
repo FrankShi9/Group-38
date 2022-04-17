@@ -36,11 +36,19 @@ def login(request):
         password = request.POST.get("password")
 
         user_obj = models.UserInfo.objects.filter(email=email, password=password).first()
+
         if user_obj is not None:
-            response = redirect('/chooseFunc')
-            response.set_cookie("is_login", True, max_age=60 * 60 * 24)
-            response.set_cookie("email", email, max_age=60 * 60 * 24)
-            return response
+
+            if 'admin' in email:
+                response = redirect('/Admin')
+                response.set_cookie("admin", True, max_age=60 * 60 * 24)
+                return response
+            else:
+                response = redirect('/chooseFunc')
+                response.set_cookie("is_login", True, max_age=60 * 60 * 24)
+                response.set_cookie("email", email, max_age=60 * 60 * 24)
+                return response
+
         else:
             return HttpResponse('Login failed')
 
@@ -158,8 +166,10 @@ def uploadfile(request):
             return redirect('/demand')
         elif funcNum == str(2):
             return redirect('/rfm')
-        elif funcNum == str(3):
+        elif funcNum == str(3.1):
             return redirect('/xts')
+        elif funcNum == str(3.2):
+            return redirect('/xts') #change to holt winters
 
 
 def demand(request):
@@ -491,6 +501,12 @@ def xts(request):
     data = {
         'y1': y_test,
         'y2': y_pred,
+        'open': data['Open'].to_string(index=False).split('\n'),
+        'high': data['High'].to_string(index=False).split('\n'),
+        'low': data['Low'].to_string(index=False).split('\n'),
+        'close': data['Close'].to_string(index=False).split('\n'),
+        'adjClose': data['Adj Close'].to_string(index=False).split('\n'),
+        'volume': data['Volume'].to_string(index=False).split('\n'),
     }
     #print('1:', data.get('x1'))
     #print('2', data.get('y2'))
@@ -530,3 +546,49 @@ def f00(request):
     # if GET, simply render templates
     if request.method == "GET":
         return render(request, "500.html")
+
+
+def AboutUs(request):
+    if request.method == "GET":
+        return render(request, "index.html")
+
+def Admin(request):
+    if request.method == "GET":
+        return render(request, "index.html")
+
+    if request.method == "POST":
+        funcNum = request.COOKIES.get('funcNum')
+        print(funcNum)
+        if funcNum == str(1):
+            email = models.UserInfo.objects.values_list('email', flat=True)
+            password = models.UserInfo.objects.values_list('password', flat=True)
+            data = {
+                'email': list(email),
+                'password': list(password),
+            }
+            #print('1:', data.get('email'))
+            #print('2', data.get('password'))
+            return HttpResponse(json.dumps(data))
+
+        elif funcNum == str(2):
+            file = request.FILES.get('file')
+            # print(request.POST.get('funcNum'))
+            # file = request.POST.get('file')
+            print(file)
+
+            if not file:
+                print("no file")
+                return HttpResponse("file not found")
+
+            uploadfilepath = "./Area_38_app/m3/"
+
+            if not os.path.exists(uploadfilepath):
+                os.makedirs(uploadfilepath)
+
+            position = os.path.join(uploadfilepath, file.name)
+            storage = open(position, 'wb')
+            for chunk in file.chunks():
+                storage.write(chunk)
+            storage.close()
+            return HttpResponse('Model update success')
+

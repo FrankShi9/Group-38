@@ -16,4 +16,6 @@ urlpatterns = [
     path('rfm/', views.rfm),
     path('xts/', views.xts),
     #404 + 500
+    path('AboutUs/', views.AboutUs),
+    path('Admin/', views.Admin),
 ]
