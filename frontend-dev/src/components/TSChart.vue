@@ -21,8 +21,8 @@
         name: "TSChart",
         data(){
             return{
-                codeImg: ""
-
+                codeImg: "",
+                publicPath: process.env.BASE_URL,
             }
         },
         created() {
@@ -415,13 +415,16 @@
             }
 
         },
-        // methods:{
-        //     getImgCode(){
-        //         let url=localStorage.getItem('key')
-        //         localStorage.clear()
-        //         this.codeImg="data:image/png;base64,"+url
-        //     }
-        // }
+        methods:{
+            askDownload() {
+                window.location.href = this.publicPath + 'pdf_download'
+            },
+            // getImgCode(){
+            //     let url=localStorage.getItem('key')
+            //     localStorage.clear()
+            //     this.codeImg="data:image/png;base64,"+url
+            // }
+        }
     }
 </script>
 

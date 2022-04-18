@@ -3,7 +3,7 @@
     <img src="../assets/RFM.png" style="width: 400px;height: 200px" id="Img">
     <div id="buttons">
         <button id="downloadImg" style="margin: 5px">Download Charts</button>
-        <button id="downloadResults" style="margin: 5px">Download Results</button>
+        <button id="downloadResults" style="margin: 5px" @click="askDownload">Download Results</button>
         <button id="return" style="margin: 5px" @click="returnBack">Return back to main menu</button>
     </div>
     <div class="mb-3 align-self-start" id="statistics1"></div>
@@ -26,13 +26,7 @@
 
         methods:{
             askDownload() {
-                axios.post('')
-                    .then(response => {
-                        console.log(response);
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    })
+                window.location.href = this.publicPath + 'pdf_download'
             },
 
             returnBack(){

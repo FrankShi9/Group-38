@@ -99,7 +99,7 @@ export default {
         }
       ],
       selectedTheme: 'white-theme',
-      isOnMobile: false
+      isOnMobile: false,
     }
   },
 

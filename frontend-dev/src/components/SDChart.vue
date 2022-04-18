@@ -23,6 +23,7 @@
         name: "SDChart",
         data(){
             return{
+                publicPath: process.env.BASE_URL,
                 a: 0,
                 b: 0,
                 price: 0,
@@ -35,6 +36,10 @@
             },
         },
         methods:{
+            askDownload() {
+                window.location.href = this.publicPath + 'pdf_download'
+            },
+
             // 预览：因为使用window.print火狐无法预览，因此采用新打开一个窗口的方式用来展示被打印的内容
             // 打印指定区域内容：通过只将需打印的内容添加到新窗口中，实现打印指定区域
             doViewAndPrint(canvasUrl) {
