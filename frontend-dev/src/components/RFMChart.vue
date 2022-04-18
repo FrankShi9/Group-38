@@ -282,36 +282,37 @@
 <style scoped>
     #main{
         float: left;
-        width: 1000px;
+        width: 60%;
         height:400px;
         margin: 20px;
     }
     #statistics1{
         float: left;
-        width: 300px;
-        height: 300px;
+        width: 30%;
+        height: 400px;
         margin: 20px
     }
     #statistics2{
         float: left;
-        width: 300px;
-        height: 300px;
+        width: 30%;
+        height: 400px;
         margin: 20px
     }
     #statistics3{
         float:left;
-        width: 300px;
-        height: 300px;
+        width: 30%;
+        height: 400px;
         margin: 20px
     }
     #buttons{
         float: left;
-        width: 300px;
+        width: 20%;
         height: 200px;
         margin: 20px;
         margin-top: 50px
     }
     #Img{
+        width: 20%;
         margin: 20px;
         margin-top: 40px;
         float: left;

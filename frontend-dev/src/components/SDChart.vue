@@ -309,23 +309,23 @@
 <style lang="scss" scoped>
 #SDChart{
     float: left;
-    width: 1000px;
-    height:400px;
+    width: 60%;
+    height: 400px;
     margin-top: 20px;
 }
 #Statistics1{
     float: left;
-    width: 300px;
-    height: 300px;
+    width: 40%;
+    height: 500px;
 }
 #Statistics2{
     float: left;
-    width: 300px;
-    height: 300px;
+    width: 40%;
+    height: 500px;
 }
 #buttons{
     float: left;
-    width: 350px;
+    width: 20%;
     height: 200px;
     margin: 20px;
     margin-top: 100px;
@@ -333,7 +333,7 @@
 }
 #rangeBox{
     float: left;
-    width: 350px;
+    width: 20%;
     height: 50px;
     margin: 20px;
     margin-top: 100px;

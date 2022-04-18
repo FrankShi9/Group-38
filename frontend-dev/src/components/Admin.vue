@@ -1,8 +1,8 @@
 <template>
-    <div class="tooltip" v-show="true" style="text-align: center;width: 100px;height: 50px">{{user}}</div>
     <div class="container-fluid">
         <div class="row align-items-center">
             <div class="col-6 offset-3">
+                <div class="mb-3 align-self-start" style="text-align: center;width: 100px;height: 50px">{{user}}</div>
                 <div class="mb-3 align-self-start">
                     <button type="submit" class="showUser form-control" @click="funcOne">Show all users</button>
                 </div>
