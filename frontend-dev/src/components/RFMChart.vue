@@ -18,7 +18,7 @@
         name: "",
         methods:{
             returnBack(){
-                window.location.href="/chooseFunc"
+                window.location.href="/home"
             }
         },
         created() {

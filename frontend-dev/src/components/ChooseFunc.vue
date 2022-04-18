@@ -1,46 +1,58 @@
 <template>
-    <div class="container-fluid">
-        <div class="row align-items-center">
-            <div class="col-4">
-                <div class="card" style="width: 18rem;">
-                    <img src="" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Demand-Supply</h5>
-                        <p class="card-text">An intro to Demand and supply</p>
-                        <button type="button" class="btn btn-primary" @click="onSubmitOne">Try it!</button>
-                    </div>
-                </div>
-            </div>
+  <div class="container" >
+    <div class="row justify-content-center align-items-center">
+      <div class="col-12">
+    <div class="jumbotron">
+      <h1 class="display-4">Hi, here is Area-38!</h1>
+      <p class="lead">We aim to provide useful insights into business data and empower your business decisions</p>
+      <hr class="my-4">
+      <a class="btn btn-primary btn-lg" href="../aboutus/" role="button">Learn more about us</a>
+    </div>
+      </div>
+    </div>
+    <br />
 
-
-            <div class="col-4">
-                <div class="card" style="width: 18rem;">
-                    <img src="" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">RFM-Prediction</h5>
-                        <p class="card-text">An intro to RFM</p>
-                        <button type="button" class="btn btn-primary" @click="onSubmitTwo">Try it!</button>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="col-4">
-                <div class="card" style="width: 18rem;">
-                    <img src="" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">RFM-Prediction</h5>
-                        <p class="card-text">An intro to RFM</p>
-                        <button type="button" class="btn btn-primary" @click="onSubmitThree">Try it!</button>
-                    </div>
+    <div class="row justify-content-center align-items-center">
+        <div class="col-4">
+            <div class="card" style="width: 18rem;">
+                <img src="../assets/demand_supply.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Demand and Supply</h5>
+                    <p class="card-text">Find your optimal pricing strategy</p>
+                    <button type="button" class="btn btn-primary" @click="onSubmitOne">Try it!</button>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="home">
-        <model :showModelThree="this.showModelThree" @cancel="this.showModelThree=false"></model>
-    </div>
 
+
+        <div class="col-4">
+            <div class="card" style="width: 18rem;">
+                <img src="../assets/customer_logo.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">RFM Prediction</h5>
+                    <p class="card-text">Locate your target customer</p>
+                    <button type="button" class="btn btn-primary" @click="onSubmitTwo">Try it!</button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-4">
+            <div class="card" style="width: 18rem;">
+                <img src="../assets/lstm.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Time-Series Prediction</h5>
+                    <p class="card-text">Predict your future profit</p>
+                    <button type="button" class="btn btn-primary" @click="onSubmitThree">Try it!</button>
+                </div>
+            </div>
+        </div>
+      </div>
+      
+      <div class="home">
+        <model :showModelThree="this.showModelThree" @cancel="this.showModelThree=false"></model>
+      </div>
+  </div>
 </template>
 
 <script>
@@ -98,8 +110,23 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+.jumbotron {
+  margin-top: 2vw;
+  margin-bottom: 2vw;
+}
+img {
+  width: 18rem;
+  height: 12rem;
+}
 .home {
   width: 100%;
-  height: 1000px;
+  height: auto;
 }
 </style>
