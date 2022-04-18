@@ -26,7 +26,7 @@
 
         methods:{
             askDownload() {
-                axios.get('/pdf_down', )
+                axios.post('')
                     .then(response => {
                         console.log(response);
                     })
@@ -42,6 +42,7 @@
         created() {
             //let url=decodeURIComponent(this.$route.query.arg)
             //let arg=JSON.parse(url)
+            // console.log(this.publicPath);
             let arg=JSON.parse(localStorage.getItem('key'))
             localStorage.clear()
             let keys=Object.keys(arg)
