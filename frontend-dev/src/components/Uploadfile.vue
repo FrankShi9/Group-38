@@ -80,25 +80,38 @@
                         const arg=JSON.stringify(response.data)
                         console.log(arg)
                         localStorage.setItem('key',arg)
-                        window.location.href='/TSChart'
+                        window.location.href='/TSChart?funcNum=3.1'
+                    }
+                    if (parseFloat(funcNum)==3.2){
+                        const arg=JSON.stringify(response.data)
+                        localStorage.setItem('key',arg)
+                        window.location.href='/TSChart?funcNum=3.2'
                     }
                 })
 				.catch(reason => {
-                    // if (parseInt(funcNum)==1){
-                    //     const data={'a': -1.44, 'b': 9.72, 'c': 16, 'd': 24, 'e': 142,'f': 300,'g':{'p':100,'q':200}}
-                    //     const arg=JSON.stringify(data)
-                    //     localStorage.setItem("key",arg)
-                    //     //window.location.href='/SDChart?arg='+window.encodeURIComponent(arg);
-                    //     window.location.href='/SDChart'
-                    // }else if (parseInt(funcNum)==2){
-                    //     const data={'a': 144, 'b': 972, 'c': 160, 'd': 240, 'e': 142,'f': 300,'g':400,'r':{'r':100,'f':100,'m':100}}
-                    //     const arg=JSON.stringify(data)
-                    //     localStorage.setItem('key',arg)
-                    //     window.location.href='/RFMChart'}
-                    // // }else if (parseInt(funcNum)==3){
-                    // //     window.location.href='/TSChart'
-                    // // }
-                    // console.log(reason)
+                    if (parseInt(funcNum)==1){
+                        const data={'a': -1.44, 'b': 9.72, 'c': 16, 'd': 24, 'e': 142,'f': 300,'g':{'p':100,'q':200}}
+                        const arg=JSON.stringify(data)
+                        localStorage.setItem("key",arg)
+                        //window.location.href='/SDChart?arg='+window.encodeURIComponent(arg);
+                        window.location.href='/SDChart'
+                    }else if (parseInt(funcNum)==2){
+                        const data={'a': 144, 'b': 972, 'c': 160, 'd': 240, 'e': 142,'f': 300,'g':400,'r':{'r':100,'f':100,'m':100}}
+                        const arg=JSON.stringify(data)
+                        localStorage.setItem('key',arg)
+                        window.location.href='/RFMChart'
+                    } else if (parseFloat(funcNum)==3.1) {
+                        const data={'y1':100,'y2':100,'open':100,'high':100,'low':100,'close':100,'adjClose':100,'volume':100 }
+                        const arg=JSON.stringify(data)
+                        localStorage.setItem('key',arg)
+                        window.location.href = '/TSChart?funcNum=3.1'
+                    } else if (parseFloat(funcNum)==3.2){
+                        const data={'y1':100,'y2':100,'y3':100,'value':100 }
+                        const arg=JSON.stringify(data)
+                        localStorage.setItem('key',arg)
+                        window.location.href = '/TSChart?funcNum=3.2'
+                    }
+                    console.log(reason)
 				});
 			},
 		}
