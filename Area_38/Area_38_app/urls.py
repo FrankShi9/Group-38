@@ -4,18 +4,20 @@ from . import views
 
 
 urlpatterns = [
-    path('login/', views.login),
+    path('login', views.login),
     path('register/', views.register),
     path('forget/', views.forget),
     path('SDChart/', views.SDChart),
     path('RFMChart/', views.RFMChart),
     path('TSChart/', views.TSChart),
     path('uploadfile/', views.uploadfile),
-    path('chooseFunc/', views.chooseFunc),
+    #path('chooseFunc/', views.chooseFunc),
+    path('home/', views.home),
     path('demand/', views.demand),
     path('rfm/', views.rfm),
     path('xts/', views.xts),
-    #404 + 500
+    path('hw/', views.holt_winters),
     path('AboutUs/', views.AboutUs),
+    path('Guidance/', views.Guidance),
     path('Admin/', views.Admin),
 ]

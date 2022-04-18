@@ -1,9 +1,0 @@
-docker image gen: port, ip, config change in Dockerfile!!
-docker image push to docker hub: frankshi9/new-repo:later
-AWS->EC2->London:
-run instance
-connect to instance: web
-docker login
-docker pull
-docker run
-url config

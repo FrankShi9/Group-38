@@ -44,7 +44,7 @@ def login(request):
                 response.set_cookie("admin", True, max_age=60 * 60 * 24)
                 return response
             else:
-                response = redirect('/chooseFunc')
+                response = redirect('/home')
                 response.set_cookie("is_login", True, max_age=60 * 60 * 24)
                 response.set_cookie("email", email, max_age=60 * 60 * 24)
                 return response
@@ -117,7 +117,7 @@ def TSChart(request):
 funcNum = 0
 
 
-def chooseFunc(request):
+def home(request):
     # if GET, simply render templates
     if request.method == "GET":
         return render(request, "index.html")
@@ -142,7 +142,7 @@ def uploadfile(request):
 
         status = request.COOKIES.get('is_login')
         print(request.COOKIES)
-        if status == "True":
+        if status == "true":
             print("already login")
             user_email = request.COOKIES.get("email")
             uploadfilepath = "./" + user_email + "/upload"
@@ -169,7 +169,7 @@ def uploadfile(request):
         elif funcNum == str(3.1):
             return redirect('/xts')
         elif funcNum == str(3.2):
-            return redirect('/xts') #change to holt winters
+            return redirect('/hw')
 
 
 def demand(request):
@@ -432,9 +432,9 @@ def xts(request):
     from sklearn.preprocessing import MinMaxScaler
 
     status = request.COOKIES.get('is_login')
+    if status == "True":
+        print("xts lstm already login")
 
-
-    print("xts already login")
     user_email = request.COOKIES.get("email")
     uploadfilepath = "./" + user_email + "/upload/"
 
@@ -535,22 +535,16 @@ def pdf_down(request):
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='report.pdf')
 
-# update after lyx template
-def f0f(request):
-    # if GET, simply render templates
-    if request.method == "GET":
-        return render(request, "404.html")
-
-
-def f00(request):
-    # if GET, simply render templates
-    if request.method == "GET":
-        return render(request, "500.html")
-
 
 def AboutUs(request):
     if request.method == "GET":
         return render(request, "index.html")
+
+
+def Guidance(request):
+    if request.method == "GET":
+        return render(request, "index.html")
+
 
 def Admin(request):
     if request.method == "GET":
@@ -592,3 +586,53 @@ def Admin(request):
             storage.close()
             return HttpResponse('Model update success')
 
+
+def holt_winters(request):
+    import matplotlib.pyplot as plt
+    import pandas as pd
+    from statsmodels.tsa.holtwinters import SimpleExpSmoothing
+    from statsmodels.tsa.holtwinters import ExponentialSmoothing
+
+    status = request.COOKIES.get('is_login')
+    if status == "True":
+        print("xts hw already login")
+    user_email = request.COOKIES.get("email")
+    uploadfilepath = "./" + user_email + "/upload/"
+
+    data = pd.read_csv(uploadfilepath+"gold_price_data.csv")
+    data['Date'] = pd.to_datetime(data['Date'], format='%Y-%m-%d')
+    rNum = data.shape[0]
+    trainNum = rNum
+    # set by users
+    predictNum = int(rNum * 0.1)
+
+    train_hw = data["Value"][:trainNum]
+    test_hw = data["Value"][trainNum:]
+
+    future = ExponentialSmoothing(train_hw, trend='mul').fit()
+
+    forecast_hw = future.forecast(predictNum)
+
+    ''' plt '''
+    # plt.figure(figsize=(16, 4))
+    # plt.plot(train_hw, label='Train')
+    # plt.plot(test_hw, label='Test')
+    # plt.plot(forecast_hw, label='Forecast')
+    # plt.legend(loc='best')
+
+    train = train_hw.to_numpy()
+    y_1 = list(round(i, 2) for i in train.reshape(-1).tolist())
+    test = test_hw.to_numpy()
+    y_2 = list(round(i, 2) for i in test.reshape(-1).tolist())
+    forecast = forecast_hw.to_numpy()
+    y_3 = list(round(i, 2) for i in forecast.reshape(-1).tolist())
+    # print('y1: ', y_1)
+    # print('y2: ', y_2)
+    # print('y3: ', y_3)
+    data = {
+        'y1': y_1,
+        'y2': y_2,
+        'y3': y_3,
+        'value': data['Value'].to_string(index=False).split('\n'),
+    }
+    return HttpResponse(json.dumps(data))
