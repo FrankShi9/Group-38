@@ -1,5 +1,6 @@
 <template>
-<div class=" h-100 d-flex justify-content-center align-items-center">
+<div class="container justify-content-center align-items-center">
+    <h3 style="text-align: center;">History Actions</h3>
     <table class="table table-striped">
     <thead>
         <tr>
@@ -68,9 +69,15 @@
 </script>
 
 <style scoped>
+    .container {
+        margin-top: 2vw;
+        margin-bottom: 2vw;
+    }
     .table {
         width: 80%;
         height: auto;
+        margin-top: 2vw;
+        margin-bottom: 2vw;
         margin-left: auto;
         margin-right: auto;
     }

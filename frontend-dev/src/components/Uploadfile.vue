@@ -1,30 +1,36 @@
 <template>
 	<div class="container">
-		<div>
-			<h2>Upload File</h2>
+		<div class="row">
+            <div class="col-8 offset-2">
+                <h2>Upload File</h2>
 			<hr/>
-			<label>
-				<input type="file" @change="handleFileUpload( $event )" placeholder="choose a csv file" accept=".csv">
-                <button v-on:click="submitFile()">Submit</button>
-			</label>
-			<br>
-		</div>
+            <div class="input-group">
+                <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" @change="handleFileUpload( $event )" accept=".csv">
+                <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04" v-on:click="reset()">Reset</button>
+            </div>
+
+            <br />
+            <button class="btn btn-primary" v-on:click="submitFile()">Submit</button>
+            </div>
+        </div>
+
+        <div class="home">
+            <model :showModelTwo="this.showModelTwo"></model>
+        </div>
 	</div>
-    <div class="home">
-        <model :showModelTwo="this.showModelTwo"></model>
-    </div>
 </template>
 
 <script>
 	import axios from 'axios';
 	import Model from '../components/Model'
+
 	export default {
 	    components:{Model},
 		data(){
 			return {
 				file: '',
-                fileValue: "",
-                showModelTwo: false
+                fileValue: '',
+                showModelTwo: false,
 			}
 		},
 		
@@ -33,6 +39,12 @@
                 // a single file
 				this.file = event.target.files[0];
 			},
+
+            reset( event ) {
+                document.getElementById('inputGroupFile04').value = ""
+                this.file = '';
+            },
+
 			submitFile(){
 				let formData = new FormData();
 				let funcNum = this.$route.query.funcNum
@@ -92,9 +104,17 @@
 		}
 	}
 </script>
-<style>
+
+
+<style lang="scss" scoped>
+    .container {
+        justify-content: center;
+        align-items: center;
+        margin-top: 2vw;
+    }
+
     .home {
         width: 100%;
-        height: 1000px;
+        height: auto;
     }
 </style>

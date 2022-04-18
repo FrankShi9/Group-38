@@ -12,11 +12,29 @@
 </template>
 
 <script>
+    import axios from "axios";
     import * as echarts from 'echarts';
     import $ from "jquery";
     export default {
         name: "",
+
+        data() {
+            return {
+                publicPath: process.env.BASE_URL,
+            }
+        },
+
         methods:{
+            askDownload() {
+                axios.get('/pdf_down', )
+                    .then(response => {
+                        console.log(response);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+            },
+
             returnBack(){
                 window.location.href="/home"
             }

@@ -115,7 +115,7 @@ export default {
   methods: {
     isLogin() {
       this.login_status = cookies.get('is_login');
-      if (this.login_status == 'True') {
+      if (this.login_status == '1') {
         this.menu[5].hidden = true;
         this.menu[6].hidden = false;
         this.menu[7].hidden = false;

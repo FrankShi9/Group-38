@@ -13,6 +13,7 @@ import Admin from "@/components/Admin";
 import AboutUs from "@/components/AboutUs";
 import Guidance from "@/components/Guidance";
 import History from '@/components/History';
+import Logout from '@/components/Logout';
 
 const routes = [
   {
@@ -76,7 +77,7 @@ const routes = [
   },
   {
     path: '/logout',
-    redirect: '/home'
+    component: Logout
   }
 
 ]

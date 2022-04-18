@@ -121,6 +121,7 @@ export default {
   margin-top: 2vw;
   margin-bottom: 2vw;
 }
+
 img {
   width: 18rem;
   height: 12rem;
