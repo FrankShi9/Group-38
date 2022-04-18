@@ -29,6 +29,7 @@
             let funcNum=this.$route.query.funcNum
             console.log(funcNum)
             let arg=JSON.parse(localStorage.getItem('key'))
+            localStorage.clear()
             console.log(arg)
             if (parseFloat(funcNum)==3.1){
                 let data1=[]
@@ -426,13 +427,26 @@
 
 <style scoped>
     #main{
+        float: left;
         width: 60%;
         height: 400px;
         margin: 20px;
     }
-    #buttons{
+    #params{
+        float: left;
         width: 20%;
-        height: 400px;
+        height: 100px;
+        margin: 20px;
+        margin-top: 100px;
+        margin-left: 50px;
+    }
+    #buttons{
+        float: left;
+        width: 20%;
+        height: 200px;
+        margin: 20px;
+        margin-top: 100px;
+        margin-left: 50px;
     }
     #statistics1{
         float: left;
