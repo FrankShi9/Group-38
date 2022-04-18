@@ -1,5 +1,5 @@
 from __future__ import print_function
-
+import datetime
 from django.shortcuts import render, redirect
 
 from rest_framework.views import APIView
@@ -25,6 +25,10 @@ import json
 import io
 from django.http import FileResponse
 from reportlab.pdfgen import canvas
+
+
+temp_user_email = "temp"
+
 
 def login(request):
     # if GET, simply render templates
@@ -140,16 +144,31 @@ def uploadfile(request):
             print("no file")
             return HttpResponse("file not found")
 
+        response = None
+
         status = request.COOKIES.get('is_login')
+        user_email = temp_user_email
         print(request.COOKIES)
         if status == "true":
             print("already login")
             user_email = request.COOKIES.get("email")
             uploadfilepath = "./" + user_email + "/upload"
+            # for i in models.UserLog.objects.filter(userEmail=user_email).order_by('actionDate'):
+            #     print(i.actionDate,i.actionDescription)
+            #print(models.UserLog.objects.filter(userEmail=user_email).order_by('id').last().actionDate)
         else:
             print("didn't login")
             #return HttpResponse("login required")
-            uploadfilepath = "./upload"
+
+        # store in database
+        userfile_obj = models.UserFile.objects.create(userEmail=UserInfo.objects.get(email=user_email),
+                                                      fileName=file.name, uploadDate=datetime.datetime.now())
+        userfile_obj.save()
+        userlog_obj = models.UserLog.objects.create(userEmail=UserInfo.objects.get(email=user_email),
+                                                    fileName=file.name,
+                                                    actionDescription=str(funcNum),
+                                                    actionDate=datetime.datetime.now())
+        userlog_obj.save()
 
         if not os.path.exists(uploadfilepath):
             os.makedirs(uploadfilepath)
@@ -171,18 +190,33 @@ def uploadfile(request):
         elif funcNum == str(3.2):
             return redirect('/hw')
 
+def history(request):
+    if request.method == "GET":
+        return render("index.html")
+    if request.COOKIES.get('is_login') == 'True':
+        user_email = request.COOKIES.get('email')
+        log_objs = models.UserLog.objects.filter(userEmail=user_email)
+        data = []
+        for i in log_objs:
+            temp = {'fileName': i.fileName, 'action': i.actionDescription, 'datetime': i.actionDate}
+            data.append(temp)
+        return HttpResponse(json.dumps(data))
+    else:
+        return HttpResponse('need login')
 
 def demand(request):
     import pandas as pd
     import numpy as np
 
     status = request.COOKIES.get('is_login')
-    if status == "True":
+    if status == "true":
         print("demand already login")
         user_email = request.COOKIES.get("email")
         uploadfilepath = "./" + user_email + "/upload/"
     else:
-        uploadfilepath = "./upload/"
+        print("demand not login")
+        user_email = temp_user_email
+        uploadfilepath = "./" + user_email + "/upload/"
 
     demand = pd.read_csv(uploadfilepath+'demand.csv')
     # print(demand.head(10))
@@ -241,12 +275,14 @@ def rfm(request):
 
     # Load Dataset
     status = request.COOKIES.get('is_login')
-    if status == "True":
+    if status == "true":
         print("rfm already login")
         user_email = request.COOKIES.get("email")
         uploadfilepath = "./" + user_email + "/upload/"
     else:
-        uploadfilepath = "./upload/"
+        user_email = temp_user_email
+        uploadfilepath = "./" + user_email + "/upload/"
+
 
     data = pd.read_csv(uploadfilepath+'rfm.csv', encoding='ISO-8859-1')
 
@@ -388,19 +424,27 @@ def rfm(request):
     fig = plt.gcf()
     ax = fig.add_subplot()
     fig.set_size_inches(16, 9)
+
+
     # print(rfm_level_agg['Count'])
-    ## print('------------------------------------------------------')
-    # squarify.plot(sizes=rfm_level_agg['Count'], label=[
-    #     'Do not lose them',
-    #     'Champions',
-    #     'Loyal',
-    #     'Pay Attention',
-    #     'Potential',
-    #     'Promising',
-    #     'Activate them'], alpha=.5)
-    # plt.title("Your predicted target customer group", fontsize=19, fontweight='bold')
+    # print('------------------------------------------------------')
+    squarify.plot(sizes=rfm_level_agg['Count'], label=[
+        'Do not lose them',
+        'Champions',
+        'Loyal',
+        'Pay Attention',
+        'Potential',
+        'Promising',
+        'Activate them'], alpha=.5)
+    plt.title("Your predicted target customer group", fontsize=19, fontweight='bold')
     # plt.show(block=True)
 
+    # save fig
+    downloadpath = './{}/report/'.format(user_email)
+    if not os.path.exists(downloadpath):
+        os.makedirs(downloadpath)
+    position = os.path.join(downloadpath, 'rfm_2.png')
+    plt.savefig(position)
     ## plot lim does not need
     ## return Json to WC
     #data = dict(rfm_level_agg['Count'])
@@ -432,7 +476,7 @@ def xts(request):
     from sklearn.preprocessing import MinMaxScaler
 
     status = request.COOKIES.get('is_login')
-    if status == "True":
+    if status == "true":
         print("xts lstm already login")
 
     user_email = request.COOKIES.get("email")
@@ -514,17 +558,43 @@ def xts(request):
 
 
 # All pdf down button redirect to this one
-def pdf_down(request):
+def pdf_download(request):
+
+    if request.COOKIES.get('is_login') == 'true':
+        user_email = request.COOKIES.get('email')
+
     # Create a file-like buffer to receive PDF data.
     buffer = io.BytesIO()
 
     # Create the PDF object, using the buffer as its "file."
     p = canvas.Canvas(buffer)
 
+    # get action
+    action = models.UserLog.objects.filter(userEmail=user_email).order_by('id').last()
+    funcNum = action.actionDescription
+    filepath = "./{}/report/".format(user_email)
+    fileName = str(action.fileName)
+    fileName = fileName.split('.')[0]
+    description = ''
+    if funcNum == str(1):
+        fileName = fileName + '_1.png'
+        description = 'Demand Curve'
+    elif funcNum ==str(2):
+        fileName = fileName + '_2.png'
+        description = 'Recency, Frequency, Monetary Value Analysis'
+    elif funcNum ==str(3.1):
+        fileName = fileName + '_3_1.png'
+        description = 'LSTM Model Prediction'
+    elif funcNum ==str(3.2):
+        fileName = fileName + '_3_2png'
+        description = 'Holter Winters Model Prediction'
+    position = os.path.join(filepath, fileName)
+
     # Draw things on the PDF. Here's where the PDF generation happens.
     # See the ReportLab documentation for the full list of functionality.
-    p.drawString(100, 100, "Your analysis report")
-    p.drawImage('./foo.png', 5, 1024)
+
+    p.drawString(100, 100, description)
+    p.drawImage(position, 5, 1024)
 
     # Close the PDF object cleanly, and we're done.
     p.showPage()
@@ -594,7 +664,7 @@ def holt_winters(request):
     from statsmodels.tsa.holtwinters import ExponentialSmoothing
 
     status = request.COOKIES.get('is_login')
-    if status == "True":
+    if status == "true":
         print("xts hw already login")
     user_email = request.COOKIES.get("email")
     uploadfilepath = "./" + user_email + "/upload/"
@@ -614,11 +684,18 @@ def holt_winters(request):
     forecast_hw = future.forecast(predictNum)
 
     ''' plt '''
-    # plt.figure(figsize=(16, 4))
-    # plt.plot(train_hw, label='Train')
-    # plt.plot(test_hw, label='Test')
-    # plt.plot(forecast_hw, label='Forecast')
-    # plt.legend(loc='best')
+    plt.figure(figsize=(16, 4))
+    plt.plot(train_hw, label='Train')
+    plt.plot(test_hw, label='Test')
+    plt.plot(forecast_hw, label='Forecast')
+    plt.legend(loc='best')
+
+    # save fig
+    downloadpath = './{}/report/'.format(user_email)
+    if not os.path.exists(downloadpath):
+        os.makedirs(downloadpath)
+    position = os.path.join(downloadpath, 'gold_price_data_3_2.png')
+    plt.savefig(position)
 
     train = train_hw.to_numpy()
     y_1 = list(round(i, 2) for i in train.reshape(-1).tolist())
