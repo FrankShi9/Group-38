@@ -96,10 +96,8 @@ def forget(request):
 
 # later when we have user icon, call this function
 def logout(request):
-    response = redirect('/login')
-    response.delete_cookie('is_login')
-    response.delete_cookie("email")
-    return response
+    if request.method == "GET":
+        return render(request, "index.html")
 
 
 def SDChart(request):
