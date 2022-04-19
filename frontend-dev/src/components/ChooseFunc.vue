@@ -14,8 +14,8 @@
 
     <div class="row justify-content-center align-items-center">
         <div class="col-md-4">
-            <div class="card" style="width: 18rem;">
-                <img src="../assets/demand_supply.jpg" class="card-img-top" alt="...">
+            <div class="card text-center">
+                <img src="../assets/demand_supply.jpg" class="card-img-top" @click="onSubmitOne" alt="">
                 <div class="card-body">
                     <h5 class="card-title">Demand and Supply</h5>
                     <p class="card-text">Improve your pricing strategy</p>
@@ -26,8 +26,8 @@
 
 
         <div class="col-md-4">
-            <div class="card" style="width: 18rem;">
-                <img src="../assets/customer_logo.jpg" class="card-img-top" alt="...">
+            <div class="card text-center">
+                <img src="../assets/customer_logo.jpg" class="card-img-top" @click="onSubmitTwo" alt="">
                 <div class="card-body">
                     <h5 class="card-title">RFM Prediction</h5>
                     <p class="card-text">Locate your target customer</p>
@@ -38,8 +38,8 @@
 
 
         <div class="col-md-4">
-            <div class="card" style="width: 18rem;">
-                <img src="../assets/lstm.jpg" class="card-img-top" alt="...">
+            <div class="card text-center">
+                <img src="../assets/lstm.jpg" class="card-img-top" @click="onSubmitThree" alt="">
                 <div class="card-body">
                     <h5 class="card-title">Time-Series Prediction</h5>
                     <p class="card-text">Predict your future profit</p>
@@ -120,13 +120,13 @@ export default {
 }
 
 .jumbotron {
-  margin-top: 2vw;
+  margin-top: 3vw;
   margin-bottom: 2vw;
 }
 
-img {
-  width: 18rem;
-  height: 12rem;
+.col-md-4 img {
+  width: 100%;
+  height: 18vw;
 }
 
 .home {

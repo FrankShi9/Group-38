@@ -7,7 +7,6 @@
         <th scope="col">Date</th>
         <th scope="col">Uploaded File</th>
         <th scope="col">Action</th>
-        <th scope="col">Report</th>
         </tr>
     </thead>
 
@@ -16,7 +15,6 @@
         <td>{{  item.datetime }}</td>
         <td>{{   item.fileName }}</td>
         <td>{{   item.action }}</td>
-        <td><a class="btn btn-primary" href="{{ item.report }}" role="button">Download Report</a></td>
         </tr>
     </tbody>
 

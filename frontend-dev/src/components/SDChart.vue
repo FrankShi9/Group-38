@@ -8,7 +8,7 @@
     </div>
     <div id="buttons">
         <button id="downloadImg" style="margin: 5px">Download Charts</button><br>
-        <button id="downloadResults" style="margin: 5px">Download Results</button><br>
+        <button id="downloadResults" style="margin: 5px" @click="askDownload">Download Results</button><br>
         <button id="return" style="margin: 5px" @click="returnBack">Return back to main menu</button>
     </div>
     <div class="mb-3 align-self-start" id="Statistics1"></div>
