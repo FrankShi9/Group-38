@@ -21,4 +21,5 @@ urlpatterns = [
     path('Guidance/', views.Guidance),
     path('Admin/', views.Admin),
     path('pdf_download/', views.pdf_download),
+    path('history/', views.pdf_download),
 ]

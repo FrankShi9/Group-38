@@ -594,7 +594,7 @@ def pdf_download(request):
     # See the ReportLab documentation for the full list of functionality.
 
     p.drawString(100, 100, description)
-    p.drawImage(position, 5, 1024)
+    p.drawImage(position, 50, 300, width=500, height=500)
 
     # Close the PDF object cleanly, and we're done.
     p.showPage()
