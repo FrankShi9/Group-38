@@ -142,7 +142,7 @@ def uploadfile(request):
 
         status = request.COOKIES.get('is_login')
         print(request.COOKIES)
-        if status == "true":
+        if status == "True":
             print("already login")
             user_email = request.COOKIES.get("email")
             uploadfilepath = "./" + user_email + "/upload"
@@ -602,9 +602,11 @@ def holt_winters(request):
     data = pd.read_csv(uploadfilepath+"gold_price_data.csv")
     data['Date'] = pd.to_datetime(data['Date'], format='%Y-%m-%d')
     rNum = data.shape[0]
-    trainNum = rNum
-    # set by users
-    predictNum = int(rNum * 0.1)
+    # trainNum = rNum # BUG
+    # # set by users: 20 == 20 days
+    # predictNum = int(rNum * 0.1)
+    trainNum = int(rNum * 0.9)
+    predictNum = rNum - trainNum
 
     train_hw = data["Value"][:trainNum]
     test_hw = data["Value"][trainNum:]
@@ -627,7 +629,7 @@ def holt_winters(request):
     forecast = forecast_hw.to_numpy()
     y_3 = list(round(i, 2) for i in forecast.reshape(-1).tolist())
     # print('y1: ', y_1)
-    # print('y2: ', y_2)
+    print('y2: ', y_2)
     # print('y3: ', y_3)
     data = {
         'y1': y_1,
