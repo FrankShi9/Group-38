@@ -67,7 +67,7 @@ export default {
     return {
       file: "",
       funcNum: 0,
-      status: false,
+      status: '',
       showModelThree: false,
     };
   },
@@ -95,7 +95,6 @@ export default {
     },
   },
   created() {
-      cookies.set("is_login",true)
     this.status = cookies.get("is_login");
 
     // if (document.cookie) {

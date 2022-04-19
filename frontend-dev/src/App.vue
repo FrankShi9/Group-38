@@ -33,7 +33,7 @@ export default {
   name: 'App',
   data () {
     return {
-      login_status: false,
+      login_status: '',
 
       menu: [
         {
@@ -114,7 +114,9 @@ export default {
 
   methods: {
     isLogin() {
+      // cookies.set('is_login', 'true')
       this.login_status = cookies.get('is_login');
+      console.log('login status is ' + this.login_status)
       if (this.login_status == 'true') {
         this.menu[5].hidden = true;
         this.menu[6].hidden = false;
@@ -122,6 +124,7 @@ export default {
       }
       else {
         // do nothing
+        this.login_status = '';
       }
     },
 

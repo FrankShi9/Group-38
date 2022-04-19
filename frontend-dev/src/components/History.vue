@@ -11,10 +11,10 @@
     </thead>
 
     <tbody>
-        <tr v-for="(item, i) in history_data" :key="i">
-        <td>{{  item.datetime }}</td>
-        <td>{{   item.fileName }}</td>
-        <td>{{   item.action }}</td>
+        <tr v-for="(item, i) in this.historyData" :key="i">
+        <td>{{  item["datetime"] }}</td>
+        <td>{{   item["fileName"] }}</td>
+        <td>{{   item["action"] }}</td>
         </tr>
     </tbody>
 
@@ -28,22 +28,22 @@
         name: "History",
         data() {
             return {
-                history_data: [],
+                publicPath: process.env.BASE_URL,
+                historyData: [],
             }
-        },
-
-        created() {
-            this.getData()
         },
 
         methods: {
             getData() {
-                axios.get('')
-                    .then(function (response) {
-                        console.log(response.data);
-                        this.history_data = response.data;
+                // this.publicPath+'history/api/'
+                axios.get(this.publicPath+'history/api/')
+                    .then( response =>  {
+                        // console.log(response.data); // response data is array
+                        // assign response data to it
+                        this.historyData = response.data
+                        console.log(this.historyData)
                     })
-                    .catch(function (error) {
+                    .catch( error => {
                         if (error.response) {
                             // The request was made and the server responded with a status code
                             // that falls out of the range of 2xx
@@ -62,11 +62,16 @@
                         console.log(error.config);
                     });
             }
-        }
+        },
+
+        created() {
+            // console.log(this.publicPath+'history/api/')
+            this.getData()
+        },
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
     .container {
         margin-top: 2vw;
         margin-bottom: 2vw;
