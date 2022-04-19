@@ -28,7 +28,8 @@ from reportlab.pdfgen import canvas
 
 
 temp_user_email = "temp"
-
+if models.UserInfo.objects.filter(email=temp_user_email).first() is None:
+    models.UserInfo.objects.create(email=temp_user_email, password='temp').save()
 
 def login(request):
     # if GET, simply render templates
@@ -45,11 +46,11 @@ def login(request):
 
             if 'admin' in email:
                 response = redirect('/Admin')
-                response.set_cookie("admin", True, max_age=60 * 60 * 24)
+                response.set_cookie("admin", 'true', max_age=60 * 60 * 24)
                 return response
             else:
                 response = redirect('/home')
-                response.set_cookie("is_login", True, max_age=60 * 60 * 24)
+                response.set_cookie("is_login", 'true', max_age=60 * 60 * 24)
                 response.set_cookie("email", email, max_age=60 * 60 * 24)
                 return response
 
@@ -96,7 +97,7 @@ def forget(request):
 # later when we have user icon, call this function
 def logout(request):
     response = redirect('/login')
-    response.delete_cookie("is_login")
+    response.delete_cookie('is_login')
     response.delete_cookie("email")
     return response
 
@@ -144,8 +145,6 @@ def uploadfile(request):
             print("no file")
             return HttpResponse("file not found")
 
-        response = None
-
         status = request.COOKIES.get('is_login')
         user_email = temp_user_email
         print(request.COOKIES)
@@ -190,19 +189,24 @@ def uploadfile(request):
         elif funcNum == str(3.2):
             return redirect('/hw')
 
-def history(request):
-    if request.method == "GET":
-        return render("index.html")
-    if request.COOKIES.get('is_login') == 'True':
+def history_api(request):
+    if request.method == "GET" and request.COOKIES.get('is_login') == 'true':
         user_email = request.COOKIES.get('email')
         log_objs = models.UserLog.objects.filter(userEmail=user_email)
         data = []
         for i in log_objs:
-            temp = {'fileName': i.fileName, 'action': i.actionDescription, 'datetime': i.actionDate}
+            temp = {'fileName': i.fileName, 'action': i.actionDescription, 'datetime': str(i.actionDate)}
             data.append(temp)
+        print(json.dumps(data))
         return HttpResponse(json.dumps(data))
     else:
         return HttpResponse('need login')
+
+
+def history(request):
+    if request.method == "GET" and request.COOKIES.get('is_login') == 'true':
+        return render(request, 'index.html')
+
 
 def demand(request):
     import pandas as pd
