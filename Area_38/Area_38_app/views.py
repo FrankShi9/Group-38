@@ -114,6 +114,142 @@ def TSChart(request):
     if request.method == "GET":
         return render(request, "index.html")
 
+    if request.method == "POST":
+        funcNum = request.POST.get('funcNum')
+        if funcNum == '3.1':
+            import tensorflow as tf
+            import numpy as np
+            import pandas as pd
+            from sklearn.preprocessing import MinMaxScaler
+
+            status = request.COOKIES.get('is_login')
+            if status == "True":
+                print("xts lstm already login")
+            user_email = request.COOKIES.get("email")
+            uploadfilepath = "./" + user_email + "/upload/"
+
+            scaler = MinMaxScaler(feature_range=(0, 1))
+            from tensorflow import keras
+            print(tf.__version__)
+
+            # print(type(future))
+            future = 20
+            model = keras.models.load_model('Area_38_app/m3')
+            dataframe = pd.read_csv(open(uploadfilepath + 'gold_price_data.csv'), header=0, parse_dates=[0], index_col=0,
+                                    usecols=[0, 1], squeeze=True)
+            look_back = 1
+
+            def input_file(df):
+                df = df.sort_index(axis=0, ascending=True)  # 将数据按照时间顺序排列
+                dataset = df.values  # 保留所有数据值（即非时间戳列的数据）
+                line_number = df.shape[0]  # 检测有几行数据，即有几条数据
+                # scaler = MinMaxScaler(feature_range=(0, 1))
+                dataset = scaler.fit_transform(dataset.reshape(-1, 1))
+                return dataset
+
+            def interact(future, back, dataset, model):
+                predict = []  # 用来装一个一个的预测结果
+                source = []  # 用来装每一次预测的预测数据源
+                for i in range(future):
+                    t = dataset[-back:]
+                    source.append(t)
+                    source0 = np.array(source)
+                    temp = model.predict(source0)
+                    source = []  # 清空，用于下次填充
+                    dataset = np.row_stack((dataset, temp[0]))
+                    predict.append(temp[0])
+                predict = np.array(predict)
+                predict = scaler.inverse_transform(predict)
+                return predict, dataset
+
+            ds = input_file(dataframe)  # 归一化后的原始输入数据集
+
+            future = request.POST.get('future')
+            future = int(future)
+            pp, ddss = interact(future, look_back, ds, model)  # pp为用户提供范围内预测的值，ddss 为不断添加预测值更新得到的数据集
+            origin = scaler.inverse_transform(ds)  # 原始输入数据集
+
+            dif = origin[-1] - pp[0][0]
+            for i in range(future):
+                pp[i][0] = pp[i][0] + dif  # 将每个数据加上差值，从而使图像能够连接起来
+
+            # 新建空数组，填入用户自定义future预测的结果，用于接上原图
+            futurePredictPlot = np.empty_like(ddss)
+            futurePredictPlot[:] = np.nan
+            futurePredictPlot = np.reshape(futurePredictPlot, (ddss.shape[0], 1))
+            futurePredictPlot[-future: len(ddss), :] = pp
+
+            ''' 画图 '''
+            # fig1 = plt.figure(figsize=(20, 15))
+            # plt.plot(origin, color='red', label='Reality')
+            # plt.plot(futurePredictPlot, color='green', label='Future')
+            # plt.ylabel('price')
+            # plt.xlabel('date')
+            # plt.show(block=True)
+            ''' image response '''
+            # import base64
+            # with open('foo.png', "rb") as image_file:
+            #     image_data = base64.b64encode(image_file.read()).decode('utf-8')
+            # return HttpResponse(image_data)
+
+            ''' enchart response '''
+            # x_test = list(round(i,2) for i in X_test.reshape(-1).tolist())
+            y_test = list(round(i, 2) for i in origin.reshape(-1).tolist())
+            y_pred = list(round(i, 2) for i in futurePredictPlot.reshape(-1).tolist())
+            y_pred = y_pred[-future:]
+            # print(y_pred)
+
+            data = {
+                'y1': y_test,
+                'y2': y_pred,
+                # 'value': dataframe.get(['Value']).to_string(index=False).split('\n'),
+                #'value': list(i for i in dataframe.values.reshape(-1).tolist()),
+            }
+            print(data)
+            return HttpResponse(json.dumps(data))
+
+        elif funcNum == '3.2':
+
+            from statsmodels.tsa.holtwinters import ExponentialSmoothing
+            import pandas as pd
+
+            status = request.COOKIES.get('is_login')
+            if status == "True":
+                print("xts hw already login")
+            user_email = request.COOKIES.get("email")
+            uploadfilepath = "./" + user_email + "/upload/"
+
+            data = pd.read_csv(uploadfilepath + "gold_price_data.csv")
+            data['Date'] = pd.to_datetime(data['Date'], format='%Y-%m-%d')
+            rNum = data.shape[0]
+            trainNum = rNum
+            predictNum = request.POST.get('future')
+            predictNum = int(predictNum)
+
+
+            train_hw = data["Value"][:trainNum]
+            #test_hw = data["Value"][trainNum:]
+
+            future = ExponentialSmoothing(train_hw, trend='mul').fit()
+            forecast_hw = future.forecast(predictNum)
+
+            ''' plt '''
+            # plt.figure(figsize=(16, 4))
+            # plt.plot(train_hw, label='Train')
+            # plt.plot(test_hw, label='Test')
+            # plt.plot(forecast_hw, label='Forecast')
+            # plt.legend(loc='best')
+
+            train = train_hw.to_numpy()
+            y_1 = list(round(i, 2) for i in train.reshape(-1).tolist())
+            forecast = forecast_hw.to_numpy()
+            y_2 = list(round(i, 2) for i in forecast.reshape(-1).tolist())
+            data = {
+                'y1': y_1,
+                'y2': y_2,
+            }
+            return HttpResponse(json.dumps(data))
+
 funcNum = 0
 
 
@@ -426,91 +562,108 @@ def rfm(request):
 
 
 def xts(request):
-    import numpy as np
-    import matplotlib.pyplot as plt
+    # import tensorflow as tf
+    # import numpy as np
     import pandas as pd
-    from sklearn.preprocessing import MinMaxScaler
+    # from sklearn.preprocessing import MinMaxScaler
 
     status = request.COOKIES.get('is_login')
     if status == "True":
         print("xts lstm already login")
-
     user_email = request.COOKIES.get("email")
     uploadfilepath = "./" + user_email + "/upload/"
 
-    data = pd.read_csv(uploadfilepath+'BTC-USD.csv', date_parser=True)
-    data_training = data[data['Date'] < '2020-01-01'].copy()
-    data_test = data[data['Date'] < '2020-01-01'].copy()
-    training_data = data_training.drop(['Date', 'Adj Close'], axis=1)
-    scaler = MinMaxScaler()
-    training_data = scaler.fit_transform(training_data)
+    datas = pd.read_csv(open(uploadfilepath + 'gold_price_data.csv'))
 
-    from tensorflow import keras
-    import tensorflow as tf
-    print(tf.__version__)
-    model = keras.models.load_model('Area_38_app/m3')
+    # scaler = MinMaxScaler(feature_range=(0, 1))
+    # from tensorflow import keras
+    # print(tf.__version__)
+    #
+    # # print(type(future))
+    # future = 20
+    # model = keras.models.load_model('Area_38_app/m3')
+    # dataframe = pd.read_csv(open(uploadfilepath + 'gold_price_data.csv'), header=0, parse_dates=[0], index_col=0,
+    #                         usecols=[0, 1], squeeze=True)
+    # look_back = 1
+    #
+    # def input_file(df):
+    #     df = df.sort_index(axis=0, ascending=True)  # 将数据按照时间顺序排列
+    #     dataset = df.values  # 保留所有数据值（即非时间戳列的数据）
+    #     line_number = df.shape[0]  # 检测有几行数据，即有几条数据
+    #     # scaler = MinMaxScaler(feature_range=(0, 1))
+    #     dataset = scaler.fit_transform(dataset.reshape(-1, 1))
+    #     return dataset
+    #
+    # def interact(future, back, dataset, model):
+    #     predict = []  # 用来装一个一个的预测结果
+    #     source = []  # 用来装每一次预测的预测数据源
+    #     for i in range(future):
+    #         t = dataset[-back:]
+    #         source.append(t)
+    #         source0 = np.array(source)
+    #         temp = model.predict(source0)
+    #         source = []  # 清空，用于下次填充
+    #         dataset = np.row_stack((dataset, temp[0]))
+    #         predict.append(temp[0])
+    #     predict = np.array(predict)
+    #     predict = scaler.inverse_transform(predict)
+    #     return predict, dataset
+    # ds = input_file(dataframe)  # 归一化后的原始输入数据集
 
-    part_60_days = data_training.tail(60)
-    df = part_60_days.append(data_test, ignore_index=True)
-    df = df.drop(['Date', 'Adj Close'], axis=1)
-    df.head()
-    inputs = scaler.transform(df)
+    if request.method == "GET":
+        data = {
+            'y1': datas['Value'].to_string(index=False).split('\n'),
+            'start': datas['Date'].to_string(index=False).split('\n')[0],
+        }
+        #print(data)
+        return HttpResponse(json.dumps(data))
 
-    X_test = []
-    Y_test = []
-
-    #print(inputs.shape[0])
-
-    for i in range(60, inputs.shape[0]):
-        X_test.append(inputs[i - 60:i])
-        Y_test.append(inputs[i, 0])
-
-    X_test, Y_test = np.array(X_test), np.array(Y_test)
-    Y_pred = model.predict(X_test)
-    #print(type(Y_pred))
-
-    scale = 1 / 5.18164146e-05
-    Y_test = Y_test * scale
-    Y_pred = Y_pred * scale
-
-    plt.figure(figsize=(14, 5))
-    plt.plot(Y_test, color='red', label='Real Bitcoin Price')
-    plt.plot(Y_pred, color='green', label='Predicted Bitcoin Price')
-    plt.title('Bitcoin Price Prediction using RNN-LSTM')
-    plt.xlabel('Time')
-    plt.ylabel('Price')
-    plt.legend()
-    #plt.savefig('foo.png')
-
-    ''' test current dir '''
-    # import os
-    # dirspot = os.getcwd()
-    # print(dirspot)
-
-    ''' image response '''
-    # import base64
-    # with open('foo.png', "rb") as image_file:
-    #     image_data = base64.b64encode(image_file.read()).decode('utf-8')
-    # return HttpResponse(image_data)
-
-    ''' enchart integrate '''
-    #x_test = list(round(i,2) for i in X_test.reshape(-1).tolist())
-    y_test = list(round(i,2) for i in Y_test.reshape(-1).tolist())
-    y_pred = list(round(i,2) for i in Y_pred.reshape(-1).tolist())
-
-    data = {
-        'y1': y_test,
-        'y2': y_pred,
-        'open': data['Open'].to_string(index=False).split('\n'),
-        'high': data['High'].to_string(index=False).split('\n'),
-        'low': data['Low'].to_string(index=False).split('\n'),
-        'close': data['Close'].to_string(index=False).split('\n'),
-        'adjClose': data['Adj Close'].to_string(index=False).split('\n'),
-        'volume': data['Volume'].to_string(index=False).split('\n'),
-    }
-    #print('1:', data.get('x1'))
-    #print('2', data.get('y2'))
-    return HttpResponse(json.dumps(data))
+    # if request.method == "POST":
+    #     future = request.POST.get('future')
+    #     pp, ddss = interact(future, look_back, ds, model)  # pp为用户提供范围内预测的值，ddss 为不断添加预测值更新得到的数据集
+    #     origin = scaler.inverse_transform(ds)  # 原始输入数据集
+    #
+    #     dif = origin[-1] - pp[-1][0]
+    #     for i in range(future):
+    #         pp[i][0] = pp[i][0] + dif  # 将每个数据加上差值，从而使图像能够连接起来
+    #
+    #     # 新建空数组，填入用户自定义future预测的结果，用于接上原图
+    #     futurePredictPlot = np.empty_like(ddss)
+    #     futurePredictPlot[:] = np.nan
+    #     futurePredictPlot = np.reshape(futurePredictPlot, (ddss.shape[0], 1))
+    #     futurePredictPlot[-future: len(ddss), :] = pp
+    #
+    #     ''' 画图 '''
+    #     # fig1 = plt.figure(figsize=(20, 15))
+    #     # plt.plot(origin, color='red', label='Reality')
+    #     # plt.plot(futurePredictPlot, color='green', label='Future')
+    #     # plt.ylabel('price')
+    #     # plt.xlabel('date')
+    #     # plt.show(block=True)
+    #     ''' image response '''
+    #     # import base64
+    #     # with open('foo.png', "rb") as image_file:
+    #     #     image_data = base64.b64encode(image_file.read()).decode('utf-8')
+    #     # return HttpResponse(image_data)
+    #
+    #     ''' enchart response '''
+    #     #x_test = list(round(i,2) for i in X_test.reshape(-1).tolist())
+    #     y_test = list(round(i,2) for i in origin.reshape(-1).tolist())
+    #     y_pred = list(round(i,2) for i in futurePredictPlot.reshape(-1).tolist())
+    #     y_pred = y_pred[-future:]
+    #     #print(y_pred)
+    #
+    #     data = {
+    #         'y1': y_test,
+    #         'y2': y_pred,
+    #         #'value': dataframe.get(['Value']).to_string(index=False).split('\n'),
+    #         'value': dataframe.values,
+    #         #'start': datas['Date'].to_string(index=False).split('\n'),
+    #     }
+    #     #print('1:', data.get('x1'))
+    #     #print('2', data.get('y2'))
+    #     print(data)
+    #     return HttpResponse(json.dumps(data))
 
 
 # All pdf down button redirect to this one
@@ -590,8 +743,6 @@ def Admin(request):
 def holt_winters(request):
     import matplotlib.pyplot as plt
     import pandas as pd
-    from statsmodels.tsa.holtwinters import SimpleExpSmoothing
-    from statsmodels.tsa.holtwinters import ExponentialSmoothing
 
     status = request.COOKIES.get('is_login')
     if status == "True":
@@ -601,40 +752,13 @@ def holt_winters(request):
 
     data = pd.read_csv(uploadfilepath+"gold_price_data.csv")
     data['Date'] = pd.to_datetime(data['Date'], format='%Y-%m-%d')
-    rNum = data.shape[0]
-    # trainNum = rNum # BUG
-    # # set by users: 20 == 20 days
-    # predictNum = int(rNum * 0.1)
-    trainNum = int(rNum * 0.9)
-    predictNum = rNum - trainNum
 
-    train_hw = data["Value"][:trainNum]
-    test_hw = data["Value"][trainNum:]
+    if request.method == "GET":
+        datas = {
+            'y1': data['Value'].to_string(index=False).split('\n'),
+            'start': data['Date'].to_string(index=False).split('\n')[0],
+        }
+        #print(data)
+        return HttpResponse(json.dumps(datas))
 
-    future = ExponentialSmoothing(train_hw, trend='mul').fit()
 
-    forecast_hw = future.forecast(predictNum)
-
-    ''' plt '''
-    # plt.figure(figsize=(16, 4))
-    # plt.plot(train_hw, label='Train')
-    # plt.plot(test_hw, label='Test')
-    # plt.plot(forecast_hw, label='Forecast')
-    # plt.legend(loc='best')
-
-    train = train_hw.to_numpy()
-    y_1 = list(round(i, 2) for i in train.reshape(-1).tolist())
-    test = test_hw.to_numpy()
-    y_2 = list(round(i, 2) for i in test.reshape(-1).tolist())
-    forecast = forecast_hw.to_numpy()
-    y_3 = list(round(i, 2) for i in forecast.reshape(-1).tolist())
-    # print('y1: ', y_1)
-    print('y2: ', y_2)
-    # print('y3: ', y_3)
-    data = {
-        'y1': y_1,
-        'y2': y_2,
-        'y3': y_3,
-        'value': data['Value'].to_string(index=False).split('\n'),
-    }
-    return HttpResponse(json.dumps(data))
