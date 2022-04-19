@@ -190,7 +190,7 @@ def uploadfile(request):
 def history_api(request):
     if request.method == "GET" and request.COOKIES.get('is_login') == 'true':
         user_email = request.COOKIES.get('email')
-        log_objs = models.UserLog.objects.filter(userEmail=user_email)
+        log_objs = models.UserLog.objects.filter(userEmail=user_email).order_by('-actionDate')
         data = []
         for i in log_objs:
             temp = {'fileName': i.fileName, 'action': i.actionDescription, 'datetime': str(i.actionDate)}
