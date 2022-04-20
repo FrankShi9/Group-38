@@ -4,7 +4,7 @@
         <span>Please input future days to print</span>
         <input type="text" min="0" max="30" style="width: 50%" v-model="futureDays">
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <button type="submit" class="btn-primary" style="margin: 5px;border-radius: 8px" @click="Predict">Predict</button>
+        <button type="submit" class="btn-primary" style="margin: 5px;border-radius: 8px" @click="predict">Predict</button>
         <span v-show="showOne">Prediction is processing...</span>
         <span v-show="showTwo">Prediction complete !</span>
     </div>
@@ -39,10 +39,8 @@
         created() {
             let funcNum=this.$route.query.funcNum
             this.funcNum=funcNum
-            console.log(funcNum)
             let arg=JSON.parse(localStorage.getItem('key'))
             localStorage.clear()
-            console.log(arg)
             let y1=[],value=[]
             let oneDay = 24 * 3600 * 1000
             base=+new Date(arg.start)
@@ -52,168 +50,12 @@
                 y1.push([+now,arg.y1[i]])
                 value.push(arg.y1[i])
             }
-            // if (parseFloat(funcNum)==3.1){
-            //     for (var i=0;i<arg.y1.length;i++){
-            //         let now = new Date((base+=oneDay))
-            //         y1.push([+now,arg.y1[i]])
-            //         value.push(arg.y1[i])
-            //     }
-            //     // const option = {
-            //     //     toolbox: {
-            //     //         show:true,
-            //     //         right: '20px',
-            //     //         feature: {
-            //     //             dataZoom: {
-            //     //                 yAxisIndex: 'none'
-            //     //             },
-            //     //             restore: {},
-            //     //             saveAsImage: {
-            //     //                 show:true,
-            //     //                 title: 'Download image'
-            //     //             }
-            //     //         }
-            //     //     },
-            //     //     title: {
-            //     //         text: 'Time Series Prediction'
-            //     //     },
-            //     //     tooltip: {
-            //     //         trigger: 'axis',
-            //     //         // formatter: function (params) {
-            //     //         //     console.log("params:"+params)
-            //     //         //     params = params[0];
-            //     //         //     console.log("params:"+params)
-            //     //         //     var date = new Date(params.name);
-            //     //         //     console.log(date)
-            //     //         //     return (
-            //     //         //         date.getDate() +
-            //     //         //         '/' +
-            //     //         //         (date.getMonth() + 1) +
-            //     //         //         '/' +
-            //     //         //         date.getFullYear() +
-            //     //         //         ' : ' +
-            //     //         //         params.value[1]
-            //     //         //     );
-            //     //         // },
-            //     //         axisPointer: {
-            //     //             animation: false
-            //     //         }
-            //     //     },
-            //     //     xAxis: {
-            //     //         type: 'time',
-            //     //         splitLine: {
-            //     //             show: false
-            //     //         }
-            //     //     },
-            //     //     yAxis: {
-            //     //         type: 'value',
-            //     //         boundaryGap: [0, '100%'],
-            //     //         splitLine: {
-            //     //             show: false
-            //     //         }
-            //     //     },
-            //     //     dataZoom: [
-            //     //         {
-            //     //             type: 'inside',
-            //     //             start: 0,
-            //     //             //end: 20
-            //     //         },
-            //     //         {
-            //     //             start: 0,
-            //     //             //end: 20
-            //     //         }
-            //     //     ],
-            //     //     series: [
-            //     //         {
-            //     //             name: 'One',
-            //     //             type: 'line',
-            //     //             showSymbol: false,
-            //     //             data: y1
-            //     //         }
-            //     //     ]
-            //     // };
-            //     // const option1={
-            //     //     title: [
-            //     //         {text: 'Statistics data: Value', left: 'center'},
-            //     //         {
-            //     //             text: 'upper: Q3 + 1.5 * IQR \nlower: Q1 - 1.5 * IQR',
-            //     //             borderColor: '#999',
-            //     //             borderWidth: 1,
-            //     //             textStyle: {
-            //     //                 fontWeight: 'normal',
-            //     //                 fontSize: 14,
-            //     //                 lineHeight: 20
-            //     //             },
-            //     //             left: '10%',
-            //     //             top: '90%'
-            //     //         }
-            //     //     ],
-            //     //     dataset: [
-            //     //         {source: [value]},
-            //     //         {transform: {type: 'boxplot', config: { itemNameFormatter: 'expr {value}' }}},
-            //     //         {fromDatasetIndex: 1, fromTransformResult: 1}],
-            //     //     tooltip: {trigger: 'item', axisPointer: {type: 'shadow'}},
-            //     //     grid: {left: '10%', right: '10%', bottom: '15%'},
-            //     //     xAxis: {type: 'category',
-            //     //         boundaryGap: true,
-            //     //         nameGap: 30,
-            //     //         splitArea: {
-            //     //             show: false},
-            //     //         splitLine: {show: false}},
-            //     //     yAxis: {
-            //     //         type: 'value',
-            //     //         splitArea: {
-            //     //             show: true
-            //     //         },
-            //     //     },
-            //     //     series: [
-            //     //         {
-            //     //             name: 'boxplot',
-            //     //             type: 'boxplot',
-            //     //             datasetIndex: 1
-            //     //         },
-            //     //         {
-            //     //             name: 'outlier',
-            //     //             type: 'scatter',
-            //     //             datasetIndex: 2
-            //     //         }
-            //     //     ]
-            //     // }
-            //     // $(document).ready(function(){
-            //     //     chart1=echarts.init(document.getElementById("main"))
-            //     //     const chart2=echarts.init(document.getElementById("statistics1"))
-            //     //     chart1.setOption(option)
-            //     //     chart2.setOption(option1)
-            //     //
-            //     //     // const canvas = document.querySelector("#main canvas")
-            //     //     // const dataUrl = canvas.toDataURL();
-            //     //     // $('#downloadImg').on("click",function(){
-            //     //     //     doViewAndPrint(dataUrl)
-            //     //     // })
-            //     // })
-            // } else if (parseFloat(funcNum)==3.2) {
-            //     for (var i = 0; i < arg.y1.length; i++) {
-            //         let now = new Date((base += oneDay))
-            //         y1.push([+now, arg.y1[i]])
-            //     }
-            //     for (var i = 0; i < arg.y2.length; i++) {
-            //         let now = new Date((base += oneDay))
-            //         y2.push([+now, arg.y2[i]])
-            //         y3.push([+now, arg.y3[i]])
-            //     }
-            //     for (var i = 0; i < arg.value.length; i++) {
-            //         value.push(arg.value[i])
-            //     }
-            // }
 
             const option1={
                 toolbox: {
                     show:true,
                     right: '20px',
                     feature: {
-                        dataZoom: {
-                            yAxisIndex: 'none'
-                        },
-                        restore: {},
                         saveAsImage: {
                             show:true,
                             title: 'Download image'
@@ -221,26 +63,11 @@
                     }
                 },
                 title: {
-                    text: 'Dynamic Data & Time Axis'
+                    text: 'Time Series Prediction',
+                    left: 'center'
                 },
                 tooltip: {
                     trigger: 'axis',
-                    // formatter: function (params) {
-                    //     console.log("params:"+params)
-                    //     params = params[0];
-                    //     console.log("params:"+params)
-                    //     var date = new Date(params.name);
-                    //     console.log(date)
-                    //     return (
-                    //         date.getDate() +
-                    //         '/' +
-                    //         (date.getMonth() + 1) +
-                    //         '/' +
-                    //         date.getFullYear() +
-                    //         ' : ' +
-                    //         params.value[1]
-                    //     );
-                    // },
                     axisPointer: {
                         animation: false
                     }
@@ -262,11 +89,9 @@
                     {
                         type: 'inside',
                         start: 0,
-                        //end: 20
                     },
                     {
                         start: 0,
-                        //end: 20
                     }
                 ],
                 series: [
@@ -351,7 +176,7 @@
             returnBack(){
                 window.location.href = '/home'
             },
-            Predict(){
+            predict(){
                 let formData=new FormData()
                 formData.append('future',this.futureDays)
                 formData.append('funcNum',this.funcNum)
@@ -366,7 +191,6 @@
                     this.showTwo=true
                     let data=JSON.stringify(response.data)
                     let arg=JSON.parse(data)
-                    console.log(arg)
                     let y1=[],y2=[]
                     let oneDay=24 * 3600 *1000
                     let offset= 4*arg.y2.length
@@ -390,10 +214,6 @@
                             show:true,
                             right: '20px',
                             feature: {
-                                dataZoom: {
-                                    yAxisIndex: 'none'
-                                },
-                                restore: {},
                                 saveAsImage: {
                                     show:true,
                                     title: 'Download image'

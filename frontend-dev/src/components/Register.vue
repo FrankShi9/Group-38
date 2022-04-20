@@ -10,12 +10,6 @@
                 </div>
                 <form method="post" action="">
                     <div class="mb-3 align-self-start">
-                        <label for="userName" class="form-label">Username</label>
-                        <input v-model="registerForm.userName" type="text" class="form-control" id="userName" name="userName" @blur="validUserName" required>
-                        <p id="username-invalid" v-show="invalidName" style="color: red">
-                            Invalid username, it should be in the range of 5-15</p>
-                    </div>
-                    <div class="mb-3 align-self-start">
                         <label for="email" class="form-label">Email address</label>
                         <input v-model="registerForm.email" type="email" class="form-control" id="email" name="email" @blur="registeredEmail" required>
                     </div>
@@ -50,29 +44,19 @@
                     password: '',
                     confirmPassword: ''
                 },
-                invalidName: false,
                 invalidPassword: false,
                 passwordNotSame: false,
             }
         },
         methods:{
             registeredEmail(){
-                // axios.request({
-                //     method:"post",
-                //     url:'',
-                //     data:{
-                //         'email': this.registerForm.email
-                //     },
-                // }).then(response => {
-                //
-                // })
-                axios.post( '', this.registerForm.email, {
+                let formData = new FormData()
+                formData.append('email',this.registerForm.email)
+                axios.post( '', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
                 }).then(response => {
-                    console.log(123)
-                    console.log(response.data)
                     if (response.data){
                         this.duplicateName=false
                     }else {

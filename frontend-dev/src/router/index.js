@@ -13,11 +13,16 @@ import AboutUs from "@/components/AboutUs";
 import Guidance from "@/components/Guidance";
 import History from '@/components/History';
 import Logout from '@/components/Logout';
+import Forget from "@/components/Forget";
 
 const routes = [
   {
     path: '',
     redirect: '/home'
+  },
+  {
+    path: '/Forget',
+    component: Forget
   },
   {
     path: '/home',

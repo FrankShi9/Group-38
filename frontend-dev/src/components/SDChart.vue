@@ -68,7 +68,7 @@
             }
             const option1 = {
                 title:{
-                  text:'Demand and supply chart',
+                  text:'Demand Curve chart',
                   left:'center'
                 },
                 tooltip : {

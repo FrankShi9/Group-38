@@ -11,7 +11,7 @@
                 </div>
                 <div class="mb-3 align-self-start">
                     <ul v-show="this.show">
-                        <li v-for="(email, password) in userAll">Email: {{email}},Password:{{password}}</li>
+                        <li v-for="(data, index) in userAll">Index: {{index+1}}, Email: {{data[0]}}, Password:{{data[1]}}</li>
                     </ul>
                 </div>
             </div>

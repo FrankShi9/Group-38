@@ -1,6 +1,5 @@
 <template>
     <div class="Img"><img id="Logo" src="../assets/logo.png"></div>
-    <div id="Title">About Us</div><br>
     <div id="Content">
         <p class="font">
             Project Description
@@ -35,25 +34,22 @@
 </script>
 
 <style scoped>
-    #Title{
-        font-size: 50px;
-        text-align: center;
-        font-family: sans-serif;
-    }
     #Content{
-        margin-left: 25%;
-        width: 50%;
+        margin:auto;
+        left: 50%;
+        width: 800px;
         height: 800px;
     }
     #Logo{
         text-align: center;
-        width: 600px;
-        height: 400px;
+        width: 300px;
+        height: 200px;
     }
     .Img{
         text-align: center;
     }
     .font{
+        font-weight: bold;
         font-size: 20px;
         font-family: sans-serif;
     }
