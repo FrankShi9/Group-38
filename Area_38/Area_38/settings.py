@@ -29,6 +29,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     '13.40.235.86',
+    'group-38.com',
 ]
 
 
