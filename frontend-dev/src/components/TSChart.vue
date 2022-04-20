@@ -43,7 +43,7 @@
             let arg=JSON.parse(localStorage.getItem('key'))
             localStorage.clear()
             console.log(arg)
-            let y1=[],y2=[],y3=[],value=[]
+            let y1=[],value=[]
             let oneDay = 24 * 3600 * 1000
             base=+new Date(arg.start)
             this.startTime=+new Date(arg.start)
@@ -280,7 +280,7 @@
             }
             const option2={
                 title: [
-                    {text: 'Statistics data', left: 'center'},
+                    {text: 'Statistics data : Value', left: 'center'},
                     {
                         text: 'upper: Q3 + 1.5 * IQR \nlower: Q1 - 1.5 * IQR',
                         borderColor: '#999',
@@ -367,7 +367,7 @@
                     let data=JSON.stringify(response.data)
                     let arg=JSON.parse(data)
                     console.log(arg)
-                    let y1=[],y2=[],y3=[]
+                    let y1=[],y2=[]
                     let oneDay=24 * 3600 *1000
                     let offset= 4*arg.y2.length
                     base-=offset*oneDay
