@@ -25,7 +25,7 @@
                     <div class="login-button-box">
                         <button type="button" class="btn btn-secondary" @click="show">Skip</button>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <button type="submit" class="btn btn-primary">Login</button>
+                        <button type="submit" class="btn btn-primary" >Login</button>
                     </div>
                 </form>
             </div>
@@ -38,6 +38,7 @@
 
 <script>
     import Model from '../components/Model'
+    import cookies from "vue-cookies";
     export default {
         name: 'Login',
         components:{ Model },

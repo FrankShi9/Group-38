@@ -40,10 +40,12 @@
                     .then( response =>  {
                         // console.log(response.data); // response data is array
                         // assign response data to it
+                        console.log(1)
                         this.historyData = response.data
                         console.log(this.historyData)
                     })
                     .catch( error => {
+                        console.log(2)
                         if (error.response) {
                             // The request was made and the server responded with a status code
                             // that falls out of the range of 2xx
