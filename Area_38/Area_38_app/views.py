@@ -1,30 +1,24 @@
 from __future__ import print_function
 
 from django.shortcuts import render, redirect
-
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from django.http import HttpResponse
-
-from .models import User
-from .serializer import LoginSerializer
-from django.contrib.auth.mixins import LoginRequiredMixin
-
 from . import models
-from .models import UserInfo
 
 import logging
-
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('Area_38_app')
 
 import os
-from django.http import JsonResponse
 import json
-
 import io
 from django.http import FileResponse
 from reportlab.pdfgen import canvas
+import datetime
+
+
+temp_user_email = "temp"
+if models.UserInfo.objects.filter(email=temp_user_email).first() is None:
+    models.UserInfo.objects.create(email=temp_user_email, password='temp').save()
 
 def login(request):
     # if GET, simply render templates
@@ -45,7 +39,7 @@ def login(request):
                 return response
             else:
                 response = redirect('/home')
-                response.set_cookie("is_login", True, max_age=60 * 60 * 24)
+                response.set_cookie("is_login", "true", max_age=60 * 60 * 24)
                 response.set_cookie("email", email, max_age=60 * 60 * 24)
                 return response
 
@@ -91,10 +85,12 @@ def forget(request):
 
 # later when we have user icon, call this function
 def logout(request):
-    response = redirect('/login')
-    response.delete_cookie("is_login")
-    response.delete_cookie("email")
-    return response
+    # response = redirect('/login')
+    # response.delete_cookie("is_login")
+    # response.delete_cookie("email")
+    # return response
+    if request.method == "GET":
+        return render(request, "index.html")
 
 
 def SDChart(request):
@@ -121,9 +117,10 @@ def TSChart(request):
             import numpy as np
             import pandas as pd
             from sklearn.preprocessing import MinMaxScaler
+            import matplotlib.pyplot as plt
 
             status = request.COOKIES.get('is_login')
-            if status == "True":
+            if status == "true":
                 print("xts lstm already login")
             user_email = request.COOKIES.get("email")
             uploadfilepath = "./" + user_email + "/upload/"
@@ -180,18 +177,19 @@ def TSChart(request):
             futurePredictPlot[-future: len(ddss), :] = pp
 
             ''' 画图 '''
-            # fig1 = plt.figure(figsize=(20, 15))
-            # plt.plot(origin, color='red', label='Reality')
-            # plt.plot(futurePredictPlot, color='green', label='Future')
-            # plt.ylabel('price')
-            # plt.xlabel('date')
+            fig1 = plt.figure(figsize=(20, 15))
+            plt.plot(origin, color='red', label='Reality')
+            plt.plot(futurePredictPlot, color='green', label='Future')
+            plt.ylabel('price')
+            plt.xlabel('date')
             # plt.show(block=True)
-            ''' image response '''
-            # import base64
-            # with open('foo.png', "rb") as image_file:
-            #     image_data = base64.b64encode(image_file.read()).decode('utf-8')
-            # return HttpResponse(image_data)
-
+            # save fig
+            downloadpath = './{}/report/'.format(user_email)
+            if not os.path.exists(downloadpath):
+                os.makedirs(downloadpath)
+            position = os.path.join(downloadpath, 'gold_price_data_3_1.png')
+            plt.savefig(position)
+            plt.clf()
             ''' enchart response '''
             # x_test = list(round(i,2) for i in X_test.reshape(-1).tolist())
             y_test = list(round(i, 2) for i in origin.reshape(-1).tolist())
@@ -209,12 +207,12 @@ def TSChart(request):
             return HttpResponse(json.dumps(data))
 
         elif funcNum == '3.2':
-
             from statsmodels.tsa.holtwinters import ExponentialSmoothing
             import pandas as pd
+            import matplotlib.pyplot as plt
 
             status = request.COOKIES.get('is_login')
-            if status == "True":
+            if status == "true":
                 print("xts hw already login")
             user_email = request.COOKIES.get("email")
             uploadfilepath = "./" + user_email + "/upload/"
@@ -234,11 +232,18 @@ def TSChart(request):
             forecast_hw = future.forecast(predictNum)
 
             ''' plt '''
-            # plt.figure(figsize=(16, 4))
-            # plt.plot(train_hw, label='Train')
-            # plt.plot(test_hw, label='Test')
-            # plt.plot(forecast_hw, label='Forecast')
-            # plt.legend(loc='best')
+            plt.figure(figsize=(16, 4))
+            plt.plot(train_hw, label='Train')
+            plt.plot(forecast_hw, label='Forecast')
+            plt.legend(loc='best')
+
+            # save fig
+            downloadpath = './{}/report/'.format(user_email)
+            if not os.path.exists(downloadpath):
+                os.makedirs(downloadpath)
+            position = os.path.join(downloadpath, 'gold_price_data_3_2.png')
+            plt.savefig(position)
+            plt.clf()
 
             train = train_hw.to_numpy()
             y_1 = list(round(i, 2) for i in train.reshape(-1).tolist())
@@ -249,6 +254,7 @@ def TSChart(request):
                 'y2': y_2,
             }
             return HttpResponse(json.dumps(data))
+
 
 funcNum = 0
 
@@ -277,15 +283,29 @@ def uploadfile(request):
             return HttpResponse("file not found")
 
         status = request.COOKIES.get('is_login')
+        user_email = temp_user_email
         print(request.COOKIES)
-        if status == "True":
+        if status == "true":
             print("already login")
             user_email = request.COOKIES.get("email")
             uploadfilepath = "./" + user_email + "/upload"
         else:
             print("didn't login")
+            uploadfilepath = "./" + user_email + "/upload"
             #return HttpResponse("login required")
-            uploadfilepath = "./upload"
+            #uploadfilepath = "./upload"
+
+        # store in database
+        funcNum = request.GET.get('funcNum')
+        print(funcNum)
+        userfile_obj = models.UserFile.objects.create(userEmail=models.UserInfo.objects.get(email=user_email),
+                                                      fileName=file.name, uploadDate=datetime.datetime.now())
+        userfile_obj.save()
+        userlog_obj = models.UserLog.objects.create(userEmail=models.UserInfo.objects.get(email=user_email),
+                                                    fileName=file.name,
+                                                    actionDescription=str(funcNum),
+                                                    actionDate=datetime.datetime.now())
+        userlog_obj.save()
 
         if not os.path.exists(uploadfilepath):
             os.makedirs(uploadfilepath)
@@ -308,17 +328,40 @@ def uploadfile(request):
             return redirect('/hw')
 
 
+def history_api(request):
+    if request.method == "GET" and request.COOKIES.get('is_login') == 'true':
+        user_email = request.COOKIES.get('email')
+        log_objs = models.UserLog.objects.filter(userEmail=user_email).order_by('-actionDate')
+        data = []
+        for i in log_objs:
+            temp = {'fileName': i.fileName, 'action': i.actionDescription, 'datetime': str(i.actionDate)}
+            data.append(temp)
+        print(json.dumps(data))
+        return HttpResponse(json.dumps(data))
+    else:
+        return HttpResponse('need login')
+
+
+def history(request):
+    if request.method == "GET" and request.COOKIES.get('is_login') == 'true':
+        return render(request, 'index.html')
+
+
 def demand(request):
     import pandas as pd
     import numpy as np
 
     status = request.COOKIES.get('is_login')
-    if status == "True":
+    if status == "true":
         print("demand already login")
         user_email = request.COOKIES.get("email")
         uploadfilepath = "./" + user_email + "/upload/"
     else:
-        uploadfilepath = "./upload/"
+        #uploadfilepath = "./upload/"
+        print("demand not login")
+        user_email = temp_user_email
+        uploadfilepath = "./" + user_email + "/upload/"
+
 
     demand = pd.read_csv(uploadfilepath+'demand.csv')
     # print(demand.head(10))
@@ -345,15 +388,31 @@ def demand(request):
     # the coefficients a and b in param and
     # the estimated covariance of param in param_cov
     param, param_cov = curve_fit(obj2, x, y)
+    ans = np.exp(param[0] * np.log(x) + param[1])
+
     print(param)
     print(min(demand['Quantity']), max(demand['Quantity']))
     print(min(demand['Price']), max(demand['Price']))
+
+    plt.xlabel('Demand')
+    plt.ylabel('Price')
+    plt.plot(x, y, 'o', color='red', label="data")
+    plt.plot(x, ans, '--', color='blue', label="fitted curve")
+    plt.legend()
+
+    # save fig
+    downloadpath = './{}/report/'.format(user_email)
+    if not os.path.exists(downloadpath):
+        os.makedirs(downloadpath)
+    position = os.path.join(downloadpath, 'demand_1.png')
+    plt.savefig(position)
+    plt.clf()
 
     raw = {
         'q': (demand['Quantity'].to_string(index=False).split('\n')),
         'p': (demand['Price'].to_string(index=False).split('\n')),
     }
-    # return redirect('/SDChart?a='+str(param[0])+'&b='+str(param[1])+'&c='+str(min(demand['Quantity']))+'&d='+str(max(demand['Quantity']))+'&e='+str(min(demand['Price']))+'&f='+str(max(demand['Price'])))
+
     data = {'a': (param[0]),
             'b': (param[1]),
             'c': (min(demand['Quantity'])),
@@ -377,12 +436,15 @@ def rfm(request):
 
     # Load Dataset
     status = request.COOKIES.get('is_login')
-    if status == "True":
+    if status == "true":
         print("rfm already login")
         user_email = request.COOKIES.get("email")
         uploadfilepath = "./" + user_email + "/upload/"
     else:
-        uploadfilepath = "./upload/"
+        #uploadfilepath = "./upload/"
+        user_email = temp_user_email
+        uploadfilepath = "./" + user_email + "/upload/"
+
 
     data = pd.read_csv(uploadfilepath+'rfm.csv', encoding='ISO-8859-1')
 
@@ -526,17 +588,24 @@ def rfm(request):
     fig.set_size_inches(16, 9)
     # print(rfm_level_agg['Count'])
     ## print('------------------------------------------------------')
-    # squarify.plot(sizes=rfm_level_agg['Count'], label=[
-    #     'Do not lose them',
-    #     'Champions',
-    #     'Loyal',
-    #     'Pay Attention',
-    #     'Potential',
-    #     'Promising',
-    #     'Activate them'], alpha=.5)
-    # plt.title("Your predicted target customer group", fontsize=19, fontweight='bold')
+    squarify.plot(sizes=rfm_level_agg['Count'], label=[
+        'Do not lose them',
+        'Champions',
+        'Loyal',
+        'Pay Attention',
+        'Potential',
+        'Promising',
+        'Activate them'], alpha=.5)
+    plt.title("Your predicted target customer group", fontsize=19, fontweight='bold')
     # plt.show(block=True)
 
+    # save fig
+    downloadpath = './{}/report/'.format(user_email)
+    if not os.path.exists(downloadpath):
+        os.makedirs(downloadpath)
+    position = os.path.join(downloadpath, 'rfm_2.png')
+    plt.savefig(position)
+    plt.clf()
     ## plot lim does not need
     ## return Json to WC
     #data = dict(rfm_level_agg['Count'])
@@ -568,7 +637,7 @@ def xts(request):
     # from sklearn.preprocessing import MinMaxScaler
 
     status = request.COOKIES.get('is_login')
-    if status == "True":
+    if status == "true":
         print("xts lstm already login")
     user_email = request.COOKIES.get("email")
     uploadfilepath = "./" + user_email + "/upload/"
@@ -667,17 +736,45 @@ def xts(request):
 
 
 # All pdf down button redirect to this one
-def pdf_down(request):
+def pdf_download(request):
+    user_email = request.COOKIES.get('email')
+    if request.COOKIES.get('is_login') == 'true':
+        user_email = request.COOKIES.get('email')
+    print(user_email)
+    if user_email is None:
+        return HttpResponse('Cannot download PDF report, please login')
     # Create a file-like buffer to receive PDF data.
     buffer = io.BytesIO()
 
     # Create the PDF object, using the buffer as its "file."
     p = canvas.Canvas(buffer)
 
+    # get action
+    action = models.UserLog.objects.filter(userEmail=user_email).order_by('id').last()
+    funcNum = action.actionDescription
+    filepath = "./{}/report/".format(user_email)
+    fileName = str(action.fileName)
+    fileName = fileName.split('.')[0]
+    description = ''
+    if funcNum == str(1):
+        fileName = fileName + '_1.png'
+        description = 'Demand Curve'
+    elif funcNum ==str(2):
+        fileName = fileName + '_2.png'
+        description = 'Recency, Frequency, Monetary Value Analysis'
+    elif funcNum ==str(3.1):
+        fileName = fileName + '_3_1.png'
+        description = 'LSTM Model Prediction'
+    elif funcNum ==str(3.2):
+        fileName = fileName + '_3_2.png'
+        description = 'Holter Winters Model Prediction'
+    position = os.path.join(filepath, fileName)
+
     # Draw things on the PDF. Here's where the PDF generation happens.
     # See the ReportLab documentation for the full list of functionality.
-    p.drawString(100, 100, "Your analysis report")
-    p.drawImage('./foo.png', 5, 1024)
+
+    p.drawString(100, 100, description)
+    p.drawImage(position, 50, 300, width=500, height=500)
 
     # Close the PDF object cleanly, and we're done.
     p.showPage()
@@ -745,7 +842,7 @@ def holt_winters(request):
     import pandas as pd
 
     status = request.COOKIES.get('is_login')
-    if status == "True":
+    if status == "true":
         print("xts hw already login")
     user_email = request.COOKIES.get("email")
     uploadfilepath = "./" + user_email + "/upload/"
