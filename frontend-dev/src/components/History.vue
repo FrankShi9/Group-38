@@ -11,10 +11,10 @@
     </thead>
 
     <tbody>
-        <tr v-for="(item, i) in history_data" :key="i">
-        <td>{{  item.datetime }}</td>
-        <td>{{   item.fileName }}</td>
-        <td>{{   item.action }}</td>
+        <tr v-for="(item, i) in this.history_data" :key="i">
+        <td>{{  item["datetime"] }}</td>
+        <td>{{   item["fileName"] }}</td>
+        <td>{{   item["action"] }}</td>
         </tr>
     </tbody>
 
@@ -24,24 +24,25 @@
 
 <script>
     import axios from 'axios';
+    import $ from 'jquery';
     export default {
         name: "History",
+        //props: {historyData:Array},
         data() {
             return {
-                history_data: [],
+                publicPath: process.env.BASE_URL,
+                historyData:[]
             }
         },
-
-        created() {
-            this.getData()
-        },
-
         methods: {
             getData() {
-                axios.get('')
-                    .then(function (response) {
-                        console.log(response.data);
-                        this.history_data = response.data;
+                // this.publicPath+'history/api/'
+                axios.get('https://jsonplaceholder.typicode.com/posts')
+                    .then((response) => {
+                        console.log(response.data); // response data is array
+                        this.historyData.push(response.data[0])
+                        console.log('data is ')
+
                     })
                     .catch(function (error) {
                         if (error.response) {
@@ -62,11 +63,16 @@
                         console.log(error.config);
                     });
             }
-        }
+        },
+
+        created() {
+            console.log(this.publicPath+'history/api/')
+            this.getData()
+        },
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
     .container {
         margin-top: 2vw;
         margin-bottom: 2vw;

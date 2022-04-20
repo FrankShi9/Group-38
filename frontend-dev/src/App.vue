@@ -81,7 +81,7 @@ export default {
           component: markRaw(separator)
         },
         {
-          href: '/aboutus',
+          href: '/AboutUs',
           title: 'About us',
           icon: 'fa fa-info'
         }

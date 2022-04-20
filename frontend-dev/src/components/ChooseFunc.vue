@@ -95,7 +95,7 @@ export default {
     },
   },
   created() {
-      cookies.set("is_login",true)
+      //cookies.set("is_login",true)
     this.status = cookies.get("is_login");
 
     // if (document.cookie) {

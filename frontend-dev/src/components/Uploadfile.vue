@@ -50,6 +50,7 @@
 				let funcNum = this.$route.query.funcNum
                 this.showModelTwo=true
 				formData.append('file', this.file);
+				console.log(formData)
 				// issue a POST request
 				axios.post( '', formData, {
 						headers: {
@@ -101,7 +102,7 @@
                         localStorage.setItem('key',arg)
                         window.location.href='/RFMChart'
                     } else if (parseFloat(funcNum)==3.1) {
-                        const data={'y1':100,'y2':100,'open':100,'high':100,'low':100,'close':100,'adjClose':100,'volume':100 }
+                        const data={'y1':100,'y2':100,'start':'2012-03-12','value':100 }
                         const arg=JSON.stringify(data)
                         localStorage.setItem('key',arg)
                         window.location.href = '/TSChart?funcNum=3.1'

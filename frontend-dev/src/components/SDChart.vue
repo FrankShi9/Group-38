@@ -7,9 +7,9 @@
         <span> Revenue : £ {{revenue}} </span>
     </div>
     <div id="buttons">
-        <button id="downloadImg" style="margin: 5px">Download Charts</button><br>
-        <button id="downloadResults" style="margin: 5px" @click="askDownload">Download Results</button><br>
-        <button id="return" style="margin: 5px" @click="returnBack">Return back to main menu</button>
+<!--        <button id="downloadImg" style="margin: 5px;border-radius: 8px" class="btn-primary">Download Charts</button><br>-->
+        <button id="downloadResults" style="margin: 5px;border-radius: 8px" class="btn-primary" @click="askDownload">Download Results</button><br>
+        <button id="return" style="margin: 5px;border-radius: 8px" class="btn-primary" @click="returnBack">Return back to main menu</button>
     </div>
     <div class="mb-3 align-self-start" id="Statistics1"></div>
     <div class="mb-3 align-self-start" id="Statistics2"></div>
@@ -39,45 +39,6 @@
             askDownload() {
                 window.location.href = this.publicPath + 'pdf_download'
             },
-
-            // 预览：因为使用window.print火狐无法预览，因此采用新打开一个窗口的方式用来展示被打印的内容
-            // 打印指定区域内容：通过只将需打印的内容添加到新窗口中，实现打印指定区域
-            doViewAndPrint(canvasUrl) {
-                const domPrint = document.createElement('img');
-                domPrint.src = canvasUrl;
-                console.log(canvasUrl)
-                console.log(123)
-                let page = window.open('', '_blank'); // 打开一个新窗口，用于打印
-                page.document.body.appendChild(domPrint);
-
-                domPrint.onload = function () {
-                    page.print(); // 打印
-                    page.close(); // 关闭打印窗口
-                };
-            },
-            doPrintByFrame(canvasUrl) {
-                //判断iframe是否存在，不存在则创建iframe
-                var iframe = document.getElementById("print-iframe");
-                const domPrint = document.createElement('img');
-                domPrint.src = canvasUrl;
-                if (!iframe) {
-                    iframe = document.createElement('IFRAME');
-                    var doc = null;
-                    iframe.setAttribute("id", "print-iframe");
-                    iframe.setAttribute('style', 'position:absolute;width:0px;height:0px;left:-500px;top:-500px;');
-                    document.body.appendChild(iframe);
-                    doc = iframe.contentWindow.document;
-                    //这里可以自定义样式
-                    //doc.write("<LINK rel="stylesheet" type="text/css" href="css/print.css">");
-                    doc.body.appendChild(domPrint);
-                    doc.close();
-                    iframe.contentWindow.focus();
-                }
-                domPrint.onload = function () {
-                    iframe.contentWindow.print(); // 打印
-                    document.body.removeChild(iframe);
-                };
-            },
             returnBack(){
                 window.location.href="/home"
             }
@@ -106,6 +67,10 @@
                 return data;
             }
             const option1 = {
+                title:{
+                  text:'Demand and supply chart',
+                  left:'center'
+                },
                 tooltip : {
                     trigger: 'axis',
                     showContent: true,
@@ -135,9 +100,9 @@
                 },
                 animation: false,
                 grid: {
-                    top: 40,
+                    top: 50,
                     left: 50,
-                    right: 40,
+                    right: 65,
                     bottom: 50
                 },
                 xAxis: {
@@ -174,7 +139,7 @@
             };
             const option2 = {
                 title: [
-                    {text: 'Statistics data', left: 'center'},
+                    {text: 'Statistics data: Price', left: 'center'},
                     {
                         text: 'upper: Q3 + 1.5 * IQR \nlower: Q1 - 1.5 * IQR',
                         borderColor: '#999',
@@ -229,7 +194,7 @@
             };
             const option3 = {
                 title: [
-                    {text: 'Statistics data', left: 'center'},
+                    {text: 'Statistics data: Quantity', left: 'center'},
                     {
                         text: 'upper: Q3 + 1.5 * IQR \nlower: Q1 - 1.5 * IQR',
                         borderColor: '#999',
@@ -284,27 +249,27 @@
                 $('#range').attr('min',arg.e)
                 $('#range').attr('max',arg.f)
 
-                const canvas=document.querySelector("#SDChart canvas")
-                const dataUrl = canvas.toDataURL();
-                $('#downloadImg').on("click",function (){
-                    doViewAndPrint(dataUrl)
-                })
-
-                // 预览：因为使用window.print火狐无法预览，因此采用新打开一个窗口的方式用来展示被打印的内容
-                // 打印指定区域内容：通过只将需打印的内容添加到新窗口中，实现打印指定区域
-                function doViewAndPrint(canvasUrl) {
-                    const domPrint = document.createElement('img');
-                    domPrint.src = canvasUrl;
-                    console.log(canvasUrl)
-                    console.log(123)
-                    let page = window.open('', '_blank'); // 打开一个新窗口，用于打印
-                    page.document.body.appendChild(domPrint);
-
-                    domPrint.onload = function () {
-                        page.print(); // 打印
-                        page.close(); // 关闭打印窗口
-                    };
-                }
+                // const canvas=document.querySelector("#SDChart canvas")
+                // const dataUrl = canvas.toDataURL();
+                // $('#downloadImg').on("click",function (){
+                //     doViewAndPrint(dataUrl)
+                // })
+                //
+                // // 预览：因为使用window.print火狐无法预览，因此采用新打开一个窗口的方式用来展示被打印的内容
+                // // 打印指定区域内容：通过只将需打印的内容添加到新窗口中，实现打印指定区域
+                // function doViewAndPrint(canvasUrl) {
+                //     const domPrint = document.createElement('img');
+                //     domPrint.src = canvasUrl;
+                //     console.log(canvasUrl)
+                //     console.log(123)
+                //     let page = window.open('', '_blank'); // 打开一个新窗口，用于打印
+                //     page.document.body.appendChild(domPrint);
+                //
+                //     domPrint.onload = function () {
+                //         page.print(); // 打印
+                //         page.close(); // 关闭打印窗口
+                //     };
+                // }
             });
 
         },

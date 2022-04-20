@@ -2,9 +2,9 @@
     <div class="mb-3 align-self-start" id="main"></div>
     <img src="../assets/RFM.png" style="width: 400px;height: 200px" id="Img">
     <div id="buttons">
-        <button id="downloadImg" style="margin: 5px">Download Charts</button>
-        <button id="downloadResults" style="margin: 5px" @click="askDownload">Download Results</button>
-        <button id="return" style="margin: 5px" @click="returnBack">Return back to main menu</button>
+<!--        <button id="downloadImg" style="margin: 5px;border-radius: 8px" class="btn-primary">Download Charts</button>-->
+        <button id="downloadResults" style="margin: 5px;border-radius: 8px" class="btn-primary" @click="askDownload">Download Results</button>
+        <button id="return" style="margin: 5px;border-radius: 8px" class="btn-primary" @click="returnBack">Return back to main menu</button>
     </div>
     <div class="mb-3 align-self-start" id="statistics1"></div>
     <div class="mb-3 align-self-start" id="statistics2"></div>
@@ -23,21 +23,17 @@
                 publicPath: process.env.BASE_URL,
             }
         },
-
         methods:{
             askDownload() {
                 window.location.href = this.publicPath + 'pdf_download'
             },
-
             returnBack(){
                 window.location.href="/home"
             }
         },
         created() {
-            //let url=decodeURIComponent(this.$route.query.arg)
-            //let arg=JSON.parse(url)
-            // console.log(this.publicPath);
             let arg=JSON.parse(localStorage.getItem('key'))
+            console.log(this.publicPath)
             localStorage.clear()
             let keys=Object.keys(arg)
             keys.pop()
@@ -90,6 +86,10 @@
                 return data
             }
             const option = {
+                title:{
+                    text:'Target customer group Analysis',
+                    left:'center'
+                },
                 tooltip:{
                     showContent: true
                 },
@@ -113,7 +113,7 @@
             };
             const option1 ={
                 title: [
-                    {text: 'Statistics data', left: 'center'},
+                    {text: 'Statistics data: Recency', left: 'center'},
                     {
                         text: 'upper: Q3 + 1.5 * IQR \nlower: Q1 - 1.5 * IQR',
                         borderColor: '#999',
@@ -160,7 +160,7 @@
             }
             const option2 ={
                 title: [
-                    {text: 'Statistics data', left: 'center'},
+                    {text: 'Statistics data: Frequency', left: 'center'},
                     {
                         text: 'upper: Q3 + 1.5 * IQR \nlower: Q1 - 1.5 * IQR',
                         borderColor: '#999',
@@ -212,7 +212,7 @@
             const option3={
                 title:
                     [
-                    {text: 'Statistics data', left: 'center'},
+                    {text: 'Statistics data: Monetary Value', left: 'center'},
                     {
                         text: 'upper: Q3 + 1.5 * IQR \nlower: Q1 - 1.5 * IQR',
                         borderColor: '#999',
@@ -271,22 +271,22 @@
                 chart3.setOption(option3)
                 chart.setOption(option)
 
-                const canvas = document.querySelector("#main canvas")
-                const dataUrl = canvas.toDataURL();
-                $("#downloadImg").on("click",function(){
-                    doViewAndPrint(dataUrl)
-                })
-                function doViewAndPrint(canvasUrl) {
-                    const domPrint = document.createElement('img');
-                    domPrint.src = canvasUrl;
-                    let page = window.open('', '_blank'); // 打开一个新窗口，用于打印
-                    page.document.body.appendChild(domPrint);
-
-                    domPrint.onload = function () {
-                        page.print(); // 打印
-                        page.close(); // 关闭打印窗口
-                    };
-                }
+                // const canvas = document.querySelector("#main canvas")
+                // const dataUrl = canvas.toDataURL();
+                // $("#downloadImg").on("click",function(){
+                //     doViewAndPrint(dataUrl)
+                // })
+                // function doViewAndPrint(canvasUrl) {
+                //     const domPrint = document.createElement('img');
+                //     domPrint.src = canvasUrl;
+                //     let page = window.open('', '_blank'); // 打开一个新窗口，用于打印
+                //     page.document.body.appendChild(domPrint);
+                //
+                //     domPrint.onload = function () {
+                //         page.print(); // 打印
+                //         page.close(); // 关闭打印窗口
+                //     };
+                // }
             });
         }
     }
