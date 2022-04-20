@@ -11,7 +11,7 @@
     </thead>
 
     <tbody>
-        <tr v-for="(item, i) in this.history_data" :key="i">
+        <tr v-for="(item, i) in this.historyData" :key="i">
         <td>{{  item["datetime"] }}</td>
         <td>{{   item["fileName"] }}</td>
         <td>{{   item["action"] }}</td>
@@ -24,27 +24,26 @@
 
 <script>
     import axios from 'axios';
-    import $ from 'jquery';
     export default {
         name: "History",
-        //props: {historyData:Array},
         data() {
             return {
                 publicPath: process.env.BASE_URL,
-                historyData:[]
+                historyData: [],
             }
         },
+
         methods: {
             getData() {
                 // this.publicPath+'history/api/'
-                axios.get('https://jsonplaceholder.typicode.com/posts')
-                    .then((response) => {
-                        console.log(response.data); // response data is array
-                        this.historyData.push(response.data[0])
-                        console.log('data is ')
-
+                axios.get(this.publicPath+'history/api/')
+                    .then( response =>  {
+                        // console.log(response.data); // response data is array
+                        // assign response data to it
+                        this.historyData = response.data
+                        console.log(this.historyData)
                     })
-                    .catch(function (error) {
+                    .catch( error => {
                         if (error.response) {
                             // The request was made and the server responded with a status code
                             // that falls out of the range of 2xx
@@ -66,7 +65,7 @@
         },
 
         created() {
-            console.log(this.publicPath+'history/api/')
+            // console.log(this.publicPath+'history/api/')
             this.getData()
         },
     }
