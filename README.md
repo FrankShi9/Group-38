@@ -29,7 +29,7 @@ python manage.py runserver
 
 浏览器输入
 ```
-localhost:8000
+http://127.0.0.1:8000/
 ```
 
 ## 查看数据库
