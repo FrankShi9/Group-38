@@ -13,21 +13,28 @@
     </div>
     <div class="mb-3 align-self-start" id="Statistics1"></div>
     <div class="mb-3 align-self-start" id="Statistics2"></div>
+    <div class="home">
+        <model :showModelFive="this.showModelFive" @cancel="this.showModelFive=false"></model>
+    </div>
 </template>
 
 <script>
     // 引入 echarts 核心模块，核心模块提供了 echarts 使用必须要的接口。
     import * as echarts from 'echarts';
     import $ from 'jquery'
+    import Model from '../components/Model'
+    import cookies from "vue-cookies";
     export default {
         name: "SDChart",
+        components:{Model},
         data(){
             return{
                 publicPath: process.env.BASE_URL,
                 a: 0,
                 b: 0,
                 price: 0,
-                revenue: 0
+                revenue: 0,
+                showModelFive:false
             }
         },
         watch:{
@@ -37,7 +44,11 @@
         },
         methods:{
             askDownload() {
-                window.location.href = this.publicPath + 'pdf_download'
+                if (!cookies.get('is_login')){
+                    this.showModelFive=true
+                }else{
+                    window.location.href = this.publicPath + 'pdf_download'
+                }
             },
             returnBack(){
                 window.location.href="/home"

@@ -9,23 +9,33 @@
     <div class="mb-3 align-self-start" id="statistics1"></div>
     <div class="mb-3 align-self-start" id="statistics2"></div>
     <div class="mb-3 align-self-start" id="statistics3"></div>
+    <div class="home">
+        <model :showModelFive="this.showModelFive" @cancel="this.showModelFive=false"></model>
+    </div>
 </template>
 
 <script>
     import axios from "axios";
     import * as echarts from 'echarts';
+    import Model from "@/components/Model";
     import $ from "jquery";
+    import cookies from "vue-cookies";
     export default {
         name: "",
-
+        components:{Model},
         data() {
             return {
                 publicPath: process.env.BASE_URL,
+                showModelFive:false
             }
         },
         methods:{
             askDownload() {
-                window.location.href = this.publicPath + 'pdf_download'
+                if (!cookies.get("is_login")){
+                    this.showModelFive=true
+                }else {
+                    window.location.href = this.publicPath + 'pdf_download'
+                }
             },
             returnBack(){
                 window.location.href="/home"

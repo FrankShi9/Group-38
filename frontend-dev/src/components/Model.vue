@@ -29,13 +29,15 @@
             <div class="modelThree-header">Please choose your preference model</div>
             <div class="modelThree-body">
                 <div class="introOne" >
-                    <p style="border:1px solid black;width:300px; height:280px;padding:5px;">
-                        AI Model: I consider that a man's brain originally is like a little empty attic, and you have to stock it with such furniture as you choose. so that he has a difficulty in laying his hands upon it.
+                    <p style="width:300px; height:170px;padding:5px;">
+                        AI Model: <br>
+                        Predict your short term future profit (for example: 20 days) with AI Long short-term memory deep learning model.
                     </p>
                 </div>
                 <div class="introTwo">
-                    <p style="border:1px solid black;width:300px;height: 280px; padding:5px;">
-                        Statistical Model: A fool takes in all the lumber of every sort that he comes across, so that the knowledge which might be useful to him gets crowded out, or at best is jumbled up with a lot of other things,
+                    <p style="width:300px;height: 170px; padding:5px;">
+                        Statistical Model: <br>
+                        Predict your long term future profit trend (for example: 3650 days=10 years) with Holt-Winters statistical model.
                     </p>
                 </div>
             </div>
@@ -64,6 +66,20 @@
             </div>
         </div>
     </div>
+    <div class="model" v-show="this.showModelFive">
+        <div class="modelFive-dialog">
+            <div class="modelFive-header">Warning</div>
+            <div class="modelFive-body">
+                Sorry, this function is open only after login<br>
+                Press 'Login' to redirect to Login page
+            </div>
+            <div class="modelFive-footer">
+                <button class="btn" @click="redirect">Login</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button class="btn" @click="$emit('cancel')">Cancel</button>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -71,15 +87,13 @@
     import cookies from "vue-cookies";
     export default {
         name: "model",
-        props:{showModel : Boolean, showModelTwo : Boolean, showModelThree: Boolean, showModelFour: Boolean},
-        data(){
-            return{
-
-            }
-        },
+        props:{showModel : Boolean, showModelTwo : Boolean, showModelThree: Boolean, showModelFour: Boolean, showModelFive: Boolean},
         methods:{
             skip(){
                 window.location.href="/home"
+            },
+            redirect(){
+                window.location.href="/login"
             },
             modelOne(){
                 window.location.href="/uploadfile?funcNum=3.1"
@@ -189,7 +203,7 @@
         background-color: #fff;
         border-radius: 12px;
         width: 800px;
-        height: 400px;
+        height: 270px;
         border: 1px solid #f5f5f5;
         overflow: hidden;
         z-index: 10;
@@ -204,30 +218,27 @@
         border-bottom: 1px solid rgb(177, 176, 176);
     }
     .modelThree-body{
-        height: 300px;
-        font-size: 20px;
-        text-align: center;
+        height: 170px;
         background-color: #fff;
     }
     .modelThree-footer{
         background-color: #f5f5f5;
         height: 50px;
         text-align: center;
-        line-height: 50px;
     }
     .introOne{
         float: left;
         width: 300px;
-        height: 280px;
-        font-size: 20px;
+        height: 170px;
+        font-size: 18px;
         margin-left: 75px;
         margin-top: 10px;
     }
     .introTwo{
         float: left;
         width: 300px;
-        height: 280px;
-        font-size: 20px;
+        height: 170px;
+        font-size: 18px;
         margin-left: 75px;
         margin-top: 10px;
     }
@@ -312,5 +323,39 @@
         heigth: 50px;
         margin-left: 10px;
         margin-top: 17px;
+    }
+    .modelFive-dialog{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        border-radius: 12px;
+        width: 800px;
+        height: 200px;
+        border: 1px solid #f5f5f5;
+        overflow: hidden;
+        z-index: 10;
+    }
+    .modelFive-header{
+        position: relative;
+        height: 50px;
+        padding-left: 10px;
+        padding-top: 10px;
+        font-size: 20px;
+        background-color: #f5f5f5;
+        border-bottom: 1px solid rgb(177, 176, 176);
+    }
+    .modelFive-body{
+        height: 100px;
+        font-size: 25px;
+        text-align: center;
+        background-color: #fff;
+    }
+    .modelFive-footer{
+        background-color: #f5f5f5;
+        height: 50px;
+        text-align: center;
+        line-height: 50px;
     }
 </style>
