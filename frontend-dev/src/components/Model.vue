@@ -26,16 +26,22 @@
     </div>
     <div class="model" v-show="this.showModelThree">
         <div class="modelThree-dialog">
-            <div class="modelThree-header">Please choose your preference model</div>
+            <div class="modelThree-header">
+                Please choose your preference model
+<!--                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
+<!--                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
+<!--                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
+                <button class="btn-primary" @click="$emit('cancel')" style="width: 25px;height: 25px;font-size: 15px;border-radius: 8px;float: right;margin-right: 10px">X</button>
+            </div>
             <div class="modelThree-body">
                 <div class="introOne" >
-                    <p style="width:300px; height:170px;padding:5px;">
+                    <p style="border: 1px solid black;width:300px; height:170px;padding:5px;margin-left: 50px;margin-right: 50px;">
                         AI Model: <br>
                         Predict your short term future profit (for example: 20 days) with AI Long short-term memory deep learning model.
                     </p>
                 </div>
                 <div class="introTwo">
-                    <p style="width:300px;height: 170px; padding:5px;">
+                    <p style="border: 1px solid black;width:300px;height: 170px; padding:5px;margin-left: 50px;margin-right: 50px;">
                         Statistical Model: <br>
                         Predict your long term future profit trend (for example: 3650 days=10 years) with Holt-Winters statistical model.
                     </p>
@@ -43,10 +49,10 @@
             </div>
             <div class="modelThree-footer">
                 <button class="btn" @click="modelOne">AI: LSTM</button>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;
                 <button class="btn" @click="modelTwo">Statistical Model</button>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <button class="btn" @click="$emit('cancel')">Cancel</button>
             </div>
         </div>
     </div>
@@ -203,7 +209,7 @@
         background-color: #fff;
         border-radius: 12px;
         width: 800px;
-        height: 270px;
+        height: 290px;
         border: 1px solid #f5f5f5;
         overflow: hidden;
         z-index: 10;
@@ -218,7 +224,8 @@
         border-bottom: 1px solid rgb(177, 176, 176);
     }
     .modelThree-body{
-        height: 170px;
+        width: 800px;
+        height: 190px;
         background-color: #fff;
     }
     .modelThree-footer{
@@ -228,19 +235,19 @@
     }
     .introOne{
         float: left;
-        width: 300px;
+        width: 400px;
         height: 170px;
         font-size: 18px;
-        margin-left: 75px;
         margin-top: 10px;
+        margin-bottom: 10px;
     }
     .introTwo{
         float: left;
-        width: 300px;
+        width: 400px;
         height: 170px;
         font-size: 18px;
-        margin-left: 75px;
         margin-top: 10px;
+        margin-bottom: 10px;
     }
     .modelFour-dialog{
         position: absolute;

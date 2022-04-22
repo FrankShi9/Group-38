@@ -3,7 +3,7 @@
         <div class="row justify-content-center align-items-center">
             <div class="col-md-12">
                 <div class="jumbotron">
-                    <h1 class="display-4">Hi, here is Area-38!</h1>
+                    <h1 class="display-4">Hi, {{userEmail}} here is Area-38!</h1>
                     <p class="lead">We aim to provide useful insights into business data and empower your business
                         decisions</p>
                     <hr class="my-4">
@@ -71,6 +71,7 @@
                 funcNum: 0,
                 status: '',
                 showModelThree: false,
+                userEmail:''
             };
         },
         methods: {
@@ -97,6 +98,7 @@
             },
         },
         created() {
+            this.userEmail=cookies.get("email")
             this.status = cookies.get("is_login");
             // if (document.cookie) {
             //     var cookie = {};
