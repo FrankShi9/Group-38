@@ -20,7 +20,7 @@ urlpatterns = [
     path('logout/',views.logout),
     path('hw/', views.holt_winters),
     path('AboutUs/', views.AboutUs),
-    path('Guidance/', views.Guidance),
+    path('guidance/', views.Guidance),
     path('Admin/', views.Admin),
     path('pdf_download/', views.pdf_download),
     path('history/', views.history),
