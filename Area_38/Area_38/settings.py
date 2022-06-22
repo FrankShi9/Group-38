@@ -28,8 +28,6 @@ DEBUG = True
 # Add server IP here
 ALLOWED_HOSTS = [
     'localhost',
-    '13.40.235.86',
-    'group-38.com',
     'www.group-38.com',
 ]
 
