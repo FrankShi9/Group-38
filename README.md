@@ -1,7 +1,7 @@
 # Area 38: An AI-based Business Intelligence Website 
 > This repo contains our project codes and related coursework for COMP208: Group Software Project, 2022 Spring.
 
-:rocket:Our website is deployed and available online. You can take a visit by clicking [here](http://group-38.com/).
+:rocket: Our website is deployed and available online. Visit it by clicking [here](http://group-38.com/).
 
 :bulb: If you are interested in more details (demos/technical specifications), you can take a look at our [docs](https://github.com/FrankShi9/Group-38/tree/main/docs).
 
@@ -42,6 +42,7 @@ The system consists of seven components: Demand/RFM/LSTM(AI)/Holt-Winters (Stati
   - Data Visualization: Apache Echarts
 - Backend
   - Framework: Django
+  - Database: SQLite
   - ML/Statistical models: TensorFlow, scikit-learn etc.
 
 
@@ -55,8 +56,9 @@ conda activate proj38
 ```
 
 - Install dependencies
-
-`pip install -r requirements.txt `
+```
+pip install -r requirements.txt
+```
 
 - Start DB
 
@@ -76,7 +78,7 @@ python manage.py runserver
 http://localhost:8000/home
 ```
 
-> Note
+> Note:
 > You can query the database by using `sqlite3 db.sqlite3` in the command line
 > or downloading [DB browser for SQLite](https://sqlitebrowser.org/).
 
@@ -84,10 +86,10 @@ http://localhost:8000/home
 
 ## Issues
 
-If you have any question/suggestion, you are welcomed to open an issue. We will try our best to help you with it.
+:ocean: If you have any question/suggestion, please do not hesitate to open an issue. We will try our best to help you with it.
 
 
 
 ## Contributors
 
-:heart: Thanks to contributions of lovely group members and valuable feedback from our lecturers!
+:heart: Thanks to great contributions from lovely group members and valuable feedback from our lecturers!
