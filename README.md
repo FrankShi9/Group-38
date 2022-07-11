@@ -3,9 +3,9 @@
 
 :rocket:Our website is deployed and available online. You can take a visit by clicking [here](http://group-38.com/).
 
-:bulb: If you are interested in more details (demos/technical specifications), you can take a look at our [docs]().
+:bulb: If you are interested in more details (demos/technical specifications), you can take a look at our [docs](https://github.com/FrankShi9/Group-38/tree/main/docs).
 
-:hammer: This project is under [GPL-3.0 License](). Contributions of any kind are welcomed!
+:hammer: This project is under [GPL-3.0 License](https://github.com/FrankShi9/Group-38/blob/main/LICENSE). Contributions of any kind are welcomed!
 
 
 
