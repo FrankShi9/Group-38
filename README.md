@@ -23,7 +23,7 @@ Specifically, we expect to provide users with Demand curve fitting for optimised
 
 ### System Architecture
 
-<img src="C:\Users\Luyixing\AppData\Roaming\Typora\typora-user-images\image-20220711113326530.png" alt="image-20220711113326530" style="zoom: 25%;" />
+<img src="https://user-images.githubusercontent.com/64541534/178273109-60af4efa-066d-4b96-a5ee-8bc8822dc0fe.png" alt="image-20220711113326530" style="zoom: 25%;" />
 
 The system consists of seven components: Demand/RFM/LSTM(AI)/Holt-Winters (Statistical); each includes related upload/download as well as user account related systems. Guest users could not access LSTM, Holt-Winters and admin functions. A registered user could access all except admin functions. The system employs Request POST, cookies, browser buffer, DBMS and local file storage for data communication/persistence and file I/O.
 
@@ -31,7 +31,7 @@ The system consists of seven components: Demand/RFM/LSTM(AI)/Holt-Winters (Stati
 
 ### UI/UX Design
 
-<img src="C:\Users\Luyixing\AppData\Roaming\Typora\typora-user-images\image-20220711134438245.png" alt="image-20220711134438245" style="zoom:50%;" />
+<img src="https://user-images.githubusercontent.com/64541534/178273728-f73f316e-1ccb-40d8-a229-3dcaeabc99db.png" alt="image-20220711134438245" style="zoom:50%;" />
 
 
 
